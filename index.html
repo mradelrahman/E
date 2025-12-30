@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE LEGEND | MR. ABDELRAHMAN</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #001a4d;
+            --gold: #c5a059;
+            --dark: #050505;
+            --glass: rgba(255, 255, 255, 0.03);
+            --success: #2ecc71;
+            --error: #e74c3c;
+            --admin-bg: #0a0a0a;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
+        body { background: var(--dark); color: white; overflow-x: hidden; display: flex; flex-direction: column; min-height: 100vh; transition: 0.5s; }
+
+        /* Loader */
+        #page-loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(5, 5, 5, 0.98); backdrop-filter: blur(20px);
+            display: flex; justify-content: center; align-items: center; z-index: 10000;
+        }
+        .spinner { width: 60px; height: 60px; border: 5px solid var(--primary); border-top: 5px solid var(--gold); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Toast Notifications */
+        #toast-container { position: fixed; bottom: 20px; left: 20px; z-index: 9999; }
+        .toast { background: var(--primary); border-right: 5px solid var(--gold); color: white; padding: 15px 25px; margin-top: 10px; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); animation: slideIn 0.3s ease-out; }
+        @keyframes slideIn { from { transform: translateX(-100%); } to { transform: translateX(0); } }
+
+        /* Global Notification Bar */
+        #global-announcement { display:none; background: linear-gradient(90deg, var(--gold), #f1c40f); color: black; padding: 15px; text-align: center; font-weight: 900; position: sticky; top: 0; z-index: 1001; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+
+        /* Animations */
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        @keyframes wave { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } }
+
+        .social-link { color: white; font-size: 1.8rem; transition: 0.4s; display: inline-block; }
+        .social-link:hover { transform: scale(1.3) rotate(15deg); color: var(--gold); }
+
+        .page-section { display: none; flex: 1; opacity: 0; transition: opacity 0.5s ease-in-out; }
+        .page-section.active { display: flex; flex-direction: column; opacity: 1; }
+
+        .hero-section { background: radial-gradient(circle at center, #001a4d 0%, #000 100%); align-items: center; justify-content: center; padding: 40px 20px; }
+        .main-card { background: var(--glass); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); border-radius: 40px; display: grid; grid-template-columns: 1fr 1.2fr; width: 100%; max-width: 1150px; overflow: hidden; box-shadow: 0 50px 100px rgba(0,0,0,0.7); }
+        .master-side { position: relative; background: rgba(0,0,0,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 50px; overflow: hidden; }
+        .wave-bg { position: absolute; top: 40%; left: 50%; width: 500px; height: 500px; background: var(--gold); opacity: 0.1; border-radius: 43%; animation: wave 12s infinite linear; }
+        .master-img { width: 100%; max-width: 280px; z-index: 2; animation: float 5s infinite ease-in-out; border-radius: 20px; }
+
+        .form-side { background: white; padding: 40px; color: var(--primary); overflow-y: auto; max-height: 800px; }
+        .input-group { margin-bottom: 15px; position: relative; }
+        .input-group label { display: block; font-weight: 700; margin-bottom: 5px; font-size: 0.9rem; }
+        .input-group input, .input-group select, .input-group textarea { width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 10px; outline: none; transition: 0.3s; background: white; font-family: inherit; }
+        .btn-action { width: 100%; padding: 16px; background: var(--primary); color: white; border: none; border-radius: 12px; font-weight: 900; cursor: pointer; transition: 0.3s; font-size: 1.1rem; }
+        .btn-action:hover { background: var(--gold); color: black; transform: translateY(-3px); }
+
+        .eye-icon { position: absolute; left: 15px; top: 38px; cursor: pointer; color: #777; }
+
+        .dash-header { background: var(--primary); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--gold); position: sticky; top: 0; z-index: 100; }
+        .dash-nav a { color: white; text-decoration: none; margin-right: 20px; font-weight: 700; cursor: pointer; font-size: 0.9rem; }
+        .dash-nav a:hover, .dash-nav a.active-tab { color: var(--gold); }
+        
+        .card { background: var(--glass); padding: 30px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.1); margin-top: 20px; }
+        
+        .admin-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: var(--primary); padding: 25px; border-radius: 20px; border-bottom: 4px solid var(--gold); text-align: center; }
+        .stat-card h4 { font-size: 0.9rem; opacity: 0.8; }
+        .stat-card h2 { font-size: 2.2rem; color: var(--gold); }
+
+        .student-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px; }
+        .student-card { background: white; color: var(--primary); padding: 20px; border-radius: 20px; border-top: 5px solid var(--gold); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .student-card h4 { font-size: 1.2rem; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .student-card p { font-size: 0.85rem; margin-bottom: 5px; }
+
+        .admin-table-container { background: var(--glass); border-radius: 20px; overflow-x: auto; margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; min-width: 800px; }
+        th { background: rgba(197, 160, 89, 0.1); color: var(--gold); padding: 15px; text-align: right; }
+        td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.9rem; }
+
+        .badge { padding: 5px 12px; border-radius: 8px; font-size: 0.75rem; font-weight: bold; }
+        .badge-pending { background: #f39c12; color: white; }
+        .badge-accepted { background: var(--success); color: white; }
+        .badge-rejected { background: var(--error); color: white; }
+        .badge-blocked { background: #000; color: white; }
+
+        .action-btn { padding: 8px 15px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; transition: 0.2s; margin-left: 5px; }
+        .btn-approve { background: var(--success); color: white; }
+        .btn-reject { background: var(--error); color: white; }
+        .btn-delete { background: #555; color: white; }
+        .btn-details { background: var(--primary); color: white; }
+
+        .nav-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 30px; }
+        .nav-card { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 20px; text-align: center; cursor: pointer; transition: 0.3s; border: 1px solid transparent; }
+        .nav-card:hover { border-color: var(--gold); transform: translateY(-5px); background: rgba(197, 160, 89, 0.1); }
+        .nav-card i { font-size: 2.5rem; color: var(--gold); margin-bottom: 15px; }
+
+        /* Modified Lecture Card Styles */
+        .lecture-card { background: #111; border-radius: 25px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px; position: relative; transition: 0.4s; display: flex; flex-direction: column; }
+        .lecture-card:hover { transform: translateY(-8px); border-color: var(--gold); }
+        .lec-thumb-container { position: relative; width: 100%; height: 200px; overflow: hidden; }
+        .lec-img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .lecture-card:hover .lec-img { transform: scale(1.1); }
+        
+        .lec-badges { position: absolute; top: 12px; right: 12px; left: 12px; display: flex; justify-content: space-between; align-items: flex-start; z-index: 10; }
+        .lec-tag { padding: 4px 12px; border-radius: 8px; font-size: 0.7rem; font-weight: 800; color: white; backdrop-filter: blur(10px); }
+        .tag-grade { background: var(--primary); border: 1px solid var(--gold); }
+        .tag-type { background: rgba(0,0,0,0.7); }
+
+        .lec-content { padding: 20px; flex: 1; }
+        .lec-title { font-size: 1.1rem; color: var(--gold); margin-bottom: 8px; font-weight: 900; }
+        .lec-desc { font-size: 0.85rem; opacity: 0.7; line-height: 1.6; margin-bottom: 15px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        
+        .lec-footer-meta { display: flex; justify-content: space-between; align-items: center; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.05); font-size: 0.75rem; color: #777; }
+        
+        .lec-expand-trigger { width: 100%; padding: 12px; background: rgba(197, 160, 89, 0.05); border: none; color: var(--gold); cursor: pointer; display: flex; justify-content: center; align-items: center; transition: 0.3s; }
+        .lec-expand-trigger:hover { background: rgba(197, 160, 89, 0.15); }
+        .lec-actions-area { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; background: #0a0a0a; }
+        .lec-actions-area.open { max-height: 100px; padding: 15px; border-top: 1px solid rgba(197,160,89,0.2); }
+
+        .profile-container { display: grid; grid-template-columns: auto 1fr; gap: 30px; align-items: center; }
+        .profile-avatar { width: 100px; height: 100px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; color: var(--primary); }
+        .info-item { background: rgba(255,255,255,0.03); padding: 15px; border-radius: 15px; border-right: 3px solid var(--gold); }
+        .info-item label { font-size: 0.75rem; color: var(--gold); display: block; margin-bottom: 5px; }
+
+        .ticket-box { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; margin-bottom: 10px; border-right: 4px solid var(--gold); }
+        .ticket-status { font-size: 0.8rem; padding: 3px 10px; border-radius: 10px; }
+
+        .battery-container { width: 100%; background: #222; height: 15px; border-radius: 20px; position: relative; overflow: hidden; margin-top: 15px; }
+        .battery-level { width: 0%; height: 100%; background: linear-gradient(90deg, var(--gold), #f1c40f); transition: 1.5s; }
+
+        .main-footer { background: #000; color: #777; text-align: center; padding: 40px 20px; border-top: 1px solid #222; font-size: 0.9rem; }
+        .footer-links { margin-bottom: 20px; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+        .footer-links a { color: #555; text-decoration: none; transition: 0.3s; cursor: pointer; }
+        .footer-links a:hover { color: var(--gold); }
+
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 20px; }
+        .modal-content { background: #111; border: 1px solid var(--gold); padding: 30px; border-radius: 25px; max-width: 500px; width: 100%; position: relative; overflow-y: auto; max-height: 90vh; }
+
+        .hidden { display: none !important; }
+        @media (max-width: 850px) { .main-card { grid-template-columns: 1fr; } .master-side { display: none; } .profile-container { grid-template-columns: 1fr; text-align: center; justify-items: center; } .dash-header { flex-direction: column; gap: 10px; } }
+
+        body { user-select: none; -webkit-user-select: none; }
+        
+        #personal-message-bar { display: none; background: #e74c3c; color: white; padding: 20px; text-align: center; font-weight: bold; border-radius: 15px; margin-bottom: 20px; border: 2px solid white; animation: slideIn 0.5s; }
+
+        /* Admin Specific styles */
+        .editable-input { background: rgba(255,255,255,0.05); border: 1px solid #444; color: white; padding: 8px; border-radius: 8px; width: 100%; margin-bottom: 10px; }
+        .editable-label { font-size: 0.8rem; color: var(--gold); display: block; margin-bottom: 3px; }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+
+    <div id="page-loader"><div class="spinner"></div></div>
+    <div id="toast-container"></div>
+    <div id="global-announcement"></div>
+
+    <div id="app-wrapper" style="flex: 1; display: flex; flex-direction: column;">
+        
+        <section id="auth-page" class="page-section hero-section">
+            <div class="main-card">
+                <div class="master-side">
+                    <div class="wave-bg"></div>
+                    <img src="mr.png" class="master-img" alt="Master">
+                    <h2 style="z-index: 5; color: var(--gold); margin-top: 20px;">MR. ABDELRAHMAN</h2>
+                    <p style="z-index: 5; opacity: 0.8; margin-bottom: 15px;">The Legend of English</p>
+                    <div style="display:flex; gap:20px; z-index:5;">
+                        <a href="https://www.facebook.com/share/17h4uJ755w/" target="_blank" class="social-link"><i class="fab fa-facebook"></i></a>
+                        <a href="https://youtube.com/@aboodamer5407?si=-RBvddUcxlLf_wf" target="_blank" class="social-link"><i class="fab fa-youtube"></i></a>
+                        <a href="https://www.instagram.com/abdlrhmnmhmd7296?igsh=MTNrOHFxN2pxb2Vvdg==" target="_blank" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="https://wa.me/20110900577" target="_blank" class="social-link"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                <div class="form-side">
+                    <div style="display:flex; gap:20px; margin-bottom:25px; border-bottom:1px solid #eee;">
+                        <h3 id="t-login" onclick="switchAuth('login')" style="cursor:pointer; padding-bottom:10px; border-bottom:3px solid var(--primary);">دخول</h3>
+                        <h3 id="t-reg" onclick="switchAuth('reg')" style="cursor:pointer; color:#ccc; padding-bottom:10px;">حساب جديد</h3>
+                    </div>
+
+                    <form id="loginForm">
+                        <div class="input-group"><label>البريد الإلكتروني</label><input type="email" id="l_email" required></div>
+                        <div class="input-group">
+                            <label>كلمة السر</label>
+                            <input type="password" id="l_pass" required>
+                            <i class="fas fa-eye eye-icon" onclick="togglePass('l_pass')"></i>
+                        </div>
+                        <button type="submit" class="btn-action">دخول للمنصة</button>
+                    </form>
+
+                    <form id="regForm" class="hidden">
+                        <div class="input-group"><label>اسم الطالب (ثلاثي)</label><input type="text" id="r_name" required></div>
+                        <div class="input-group">
+                            <label>الصف الدراسي</label>
+                            <select id="r_grade" required>
+                                <option value="" disabled selected>اختر الصف...</option>
+                                <option value="1">الصف الأول الثانوي</option>
+                                <option value="2">الصف الثاني الثانوي</option>
+                                <option value="3">الصف الثالث الثانوي</option>
+                            </select>
+                        </div>
+                        <div class="input-group"><label>البريد الإلكتروني</label><input type="email" id="r_email" required></div>
+                        <div class="input-group"><label>رقم الهاتف</label><input type="tel" id="r_phone" required></div>
+                        <div class="input-group"><label>رقم هاتف ولي الأمر</label><input type="tel" id="r_parent_phone" required></div>
+                        <div class="input-group">
+                            <label>كلمة السر</label>
+                            <input type="password" id="r_pass" required>
+                            <i class="fas fa-eye eye-icon" onclick="togglePass('r_pass')"></i>
+                        </div>
+                        <div class="input-group">
+                            <label>تأكيد كلمة السر</label>
+                            <input type="password" id="r_pass_confirm" required>
+                            <i class="fas fa-eye eye-icon" onclick="togglePass('r_pass_confirm')"></i>
+                        </div>
+                        <button type="submit" class="btn-action" style="background:var(--gold); color:black;">إنشاء الحساب الآن</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <section id="status-page" class="page-section hero-section">
+            <div class="card" style="max-width: 500px; text-align: center; background: rgba(0,0,0,0.6);">
+                <div id="stat-pending">
+                    <i class="fas fa-clock fa-spin" style="color:var(--gold); font-size:4rem; margin-bottom:20px;"></i>
+                    <h2 style="color:var(--gold)">جارٍ مراجعة بياناتك...</h2>
+                    <p style="opacity:0.8; margin-top:10px;">أهلاً بك يا بطل، فريق الادارة يراجع طلبك الآن لتفعيل الحساب.</p>
+                </div>
+                <div id="stat-accepted" class="hidden">
+                    <i class="fas fa-check-circle" style="color:var(--success); font-size:4rem; margin-bottom:20px;"></i>
+                    <h2 style="color:var(--success)">تم قبولك في المنصة، ادخل الآن!</h2>
+                    <p style="margin-top:10px;">أهلاً بك يا بطل في المنصة .</p>
+                    <button onclick="enterPlatform()" class="btn-action" style="background:var(--success); margin-top:25px;">ادخل للمنصة الآن</button>
+                </div>
+                <div id="stat-rejected" class="hidden">
+                    <i class="fas fa-times-circle" style="color:var(--error); font-size:4rem; margin-bottom:20px;"></i>
+                    <h2 style="color:var(--error)">تم رفض طلبك، حاول مرة أخرى لاحقاً أو تواصل مع الدعم</h2>
+                    <p style="margin-top:10px;">يرجى مراجعة بياناتك أو التحدث مع فريق الدعم الفني.</p>
+                    <button onclick="logout()" class="btn-action" style="background:var(--error); margin-top:25px;">العودة للخلف</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="dash-page" class="page-section">
+            <header class="dash-header">
+                <h2 style="color:var(--gold); cursor:pointer" onclick="navigate('dash-page')">MR. ABDELRAHMAN</h2>
+                <nav class="dash-nav">
+                    <a onclick="showTab('home')" id="nav-home" class="active-tab">الرئيسية</a>
+                    <a onclick="showTab('lectures')" id="nav-lectures">المحاضرات</a>
+                    <a onclick="showTab('profile')" id="nav-profile">ملفي</a>
+                    <a onclick="showTab('support')" id="nav-support">الدعم</a>
+                    <a id="admin-btn" onclick="openAdmin()" class="hidden" style="color:var(--success); border:1px solid var(--success); padding:5px 10px; border-radius:8px;"><i class="fas fa-user-shield"></i> لوحة الإدارة</a>
+                    <a onclick="openLogoutModal()" style="color:var(--gold); border:1px solid var(--gold); padding:5px 15px; border-radius:10px;">خروج</a>
+                </nav>
+            </header>
+
+            <div style="padding:30px 5%;">
+                <div id="personal-message-bar"></div>
+
+                <div id="tab-home" class="tab-content">
+                    <div class="card" style="display:flex; align-items:center; gap:40px; flex-wrap:wrap;">
+                        <img src="mr.png" width="220" style="border-radius:20px; animation: float 4s infinite;">
+                        <div>
+                            <h1 style="font-size: 2.5rem; color: var(--gold);">مستر عبد الرحمن محمد</h1>
+                            <p style="font-size: 1.2rem; margin: 15px 0; line-height: 1.8; opacity: 0.9;">خبير تدريس اللغة الإنجليزية للثانوية العامة.</p>
+                            <div style="display:flex; gap:20px;">
+                                <a href="https://www.facebook.com/share/17h4uJ755w/" target="_blank" class="social-link"><i class="fab fa-facebook"></i></a>
+                                <a href="https://youtube.com/@aboodamer5407?si=-RBvddUcxlLf_wf" target="_blank" class="social-link"><i class="fab fa-youtube"></i></a>
+                                <a href="https://www.instagram.com/abdlrhmnmhmd7296?igsh=MTNrOHFxN2pxb2Vvdg==" target="_blank" class="social-link"><i class="fab fa-instagram"></i></a>
+                                <a href="https://wa.me/201110900577" target="_blank" class="social-link"><i class="fab fa-whatsapp"></i></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 style="margin-top:40px; border-bottom:2px solid var(--gold); display:inline-block; padding-bottom:5px;">أقسام المنصة</h3>
+                    <div class="nav-grid">
+                        <div class="nav-card" onclick="showTab('lectures')"><i class="fas fa-video"></i><h3>المحاضرات</h3></div>
+                        <div class="nav-card" onclick="showTab('profile')"><i class="fas fa-user-graduate"></i><h3>الملف الشخصي</h3></div>
+                        <div class="nav-card" onclick="showTab('support')"><i class="fas fa-headset"></i><h3>الدعم الفني</h3></div>
+                    </div>
+                </div>
+
+                <div id="tab-lectures" class="tab-content hidden">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                        <h2 style="color:var(--gold);">المحتوى التعليمي</h2>
+                        <span id="lec-count-badge" style="background: var(--gold); color: black; padding: 4px 12px; border-radius: 20px; font-weight: 700; font-size: 0.8rem;">0 محاضرة</span>
+                    </div>
+                    <div id="lectures-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px;"></div>
+                </div>
+
+                <div id="tab-profile" class="tab-content hidden">
+                    <div class="card">
+                        <div class="profile-container">
+                            <div class="profile-avatar"><i class="fas fa-user-graduate"></i></div>
+                            <div>
+                                <h2 id="p-name-head" style="color:var(--gold); margin-bottom:10px;">جاري التحميل...</h2>
+                                <p style="opacity:0.7; margin-bottom:20px;">طالب معتمد في منصة مستر عبد الرحمن </p>
+                                <div id="profile-data" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;"></div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 40px; padding: 20px; background: rgba(0,0,0,0.2); border-radius: 20px;">
+                            <h4 style="color:var(--gold)"><i class="fas fa-chart-line"></i> معدل إنجازك للمحاضرات</h4>
+                            <div class="battery-container"><div class="battery-level" id="battery-level"></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab-support" class="tab-content hidden">
+                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:20px;">
+                        <div class="card">
+                            <h3 style="color:var(--gold); margin-bottom:15px;"><i class="fas fa-plus-circle"></i> تذكرة دعم فني</h3>
+                            <form id="ticketForm">
+                                <div class="input-group">
+                                    <label>اشرح مشكلتك بالتفصيل</label>
+                                    <textarea id="tk-msg" rows="5" placeholder="اكتب هنا..." required></textarea>
+                                </div>
+                                <button type="submit" class="btn-action">إرسال الطلب</button>
+                            </form>
+                        </div>
+                        <div class="card">
+                            <h3 style="color:var(--gold); margin-bottom:15px;"><i class="fas fa-history"></i> حالة طلباتي</h3>
+                            <div id="my-tickets" style="max-height:400px; overflow-y:auto;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="admin-page" class="page-section" style="background:var(--admin-bg);">
+            <header class="dash-header" style="background:#000;">
+                <h2 style="color:var(--gold);"><i class="fas fa-user-shield"></i> لوحة الإدارة الاحترافية</h2>
+                <nav class="dash-nav">
+                    <a onclick="navigate('dash-page')">العودة للمنصة</a>
+                    <a onclick="logout()">خروج</a>
+                </nav>
+            </header>
+
+            <div style="padding:30px 5%;">
+                <div class="admin-stats">
+                    <div class="stat-card"><h4>إجمالي الطلاب</h4><h2 id="stat-users">0</h2></div>
+                    <div class="stat-card"><h4>طلبات معلقة</h4><h2 id="stat-pending-val" style="color:#f39c12">0</h2></div>
+                    <div class="stat-card"><h4>المحاضرات</h4><h2 id="stat-lecs">0</h2></div>
+                    <div class="stat-card"><h4>تذاكر الدعم</h4><h2 id="stat-tickets">0</h2></div>
+                </div>
+
+                <div style="display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap;">
+                    <button class="action-btn" style="background:var(--gold); color:black;" onclick="showAdminTab('requests')">طلبات التفعيل</button>
+                    <button class="action-btn" style="background:var(--primary); color:white;" onclick="showAdminTab('students')">بيانات الطلاب</button>
+                    <button class="action-btn" style="background:var(--primary); color:white;" onclick="showAdminTab('add-content')">إضافة محتوى</button>
+                    <button class="action-btn" style="background:var(--primary); color:white;" onclick="showAdminTab('manage-content')">إدارة المحتوى</button>
+                    <button class="action-btn" style="background:var(--primary); color:white;" onclick="showAdminTab('support-admin')">تذاكر الدعم</button>
+                    <button class="action-btn" style="background:#e67e22; color:white;" onclick="showAdminTab('notifications')">إرسال إشعار عام</button>
+                    <button class="action-btn" style="background:#000; color:white; border:1px solid var(--gold);" onclick="showAdminTab('blocked')">المحظورين</button>
+                </div>
+
+                <div id="admin-requests" class="admin-tab">
+                    <h3 style="color:var(--gold); margin-bottom:15px;">الطلبات الجديدة</h3>
+                    <div id="pending-cards-container" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:15px;"></div>
+                </div>
+
+                <div id="admin-students" class="admin-tab hidden">
+                    <h3 style="color:var(--gold); margin-bottom:15px;">قائمة الطلاب (كروت)</h3>
+                    <div id="students-grid-container" class="student-grid"></div>
+                </div>
+
+                <div id="admin-notifications" class="admin-tab hidden">
+                    <div class="card" style="max-width:700px; margin:auto; background:white; color:var(--primary);">
+                        <h3>إرسال إشعار عام للمنصة</h3>
+                        <div class="input-group"><label>نص الإشعار</label><textarea id="global-msg-text" rows="3"></textarea></div>
+                        <div class="input-group"><label>مدة الظهور (بالساعات)</label><input type="number" id="global-msg-duration" value="1" min="1" max="24"></div>
+                        <button class="btn-action" onclick="sendGlobalAnnouncement()">نشر الإشعار الآن</button>
+                        <button class="btn-action" style="background:#444; margin-top:10px;" onclick="deleteGlobalAnnouncement()">حذف الإشعار الحالي</button>
+                    </div>
+                </div>
+
+                <div id="admin-blocked" class="admin-tab hidden">
+                    <h3 style="color:var(--error); margin-bottom:15px;">قائمة المحظورين</h3>
+                    <div class="admin-table-container">
+                        <table>
+                            <thead><tr><th>الاسم</th><th>السبب</th><th>إجراءات</th></tr></thead>
+                            <tbody id="blocked-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="admin-add-content" class="admin-tab hidden">
+                    <div class="card" style="max-width:700px; margin:auto; background:white; color:var(--primary);">
+                        <h3 style="margin-bottom:20px;">إضافة محتوى جديد (محاضرة/ملف)</h3>
+                        <form id="contentForm">
+                            <div class="input-group"><label>نوع المحتوى</label><select id="c_type"><option value="video">محاضرة فيديو</option><option value="file">ملف PDF / ملزمة</option></select></div>
+                            <div class="input-group"><label>العنوان</label><input type="text" id="c_title" required></div>
+                            <div class="input-group"><label>الصف الدراسي</label><select id="c_grade"><option value="1">الأول الثانوي</option><option value="2">الثاني الثانوي</option><option value="3">الثالث الثانوي</option><option value="all">كل المراحل</option></select></div>
+                            <div class="input-group"><label>رابط المحتوى (Link)</label><input type="url" id="c_link" required></div>
+                            <div class="input-group"><label>رابط الصورة المصغرة (Thumbnail)</label><input type="url" id="c_img" placeholder="https://..."></div>
+                            <div class="input-group"><label>وصف مختصر</label><textarea id="c_desc" rows="3"></textarea></div>
+                            <button type="submit" class="btn-action">نشر الآن</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div id="admin-manage-content" class="admin-tab hidden">
+                    <h3 style="color:var(--gold); margin-bottom:15px;">إدارة المحتوى المنشور</h3>
+                    <div class="admin-table-container">
+                        <table>
+                            <thead><tr><th>العنوان</th><th>النوع</th><th>الصف</th><th>إجراءات</th></tr></thead>
+                            <tbody id="manage-lecs-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="admin-support-admin" class="admin-tab hidden">
+                    <h3 style="color:var(--gold); margin-bottom:15px;">تذاكر الدعم الفني</h3>
+                    <div id="admin-tickets-container" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(350px, 1fr)); gap:15px;"></div>
+                </div>
+
+            </div>
+        </section>
+
+        <footer class="main-footer">
+            <div class="footer-links">
+                <a onclick="showLegal('privacy')">سياسة الخصوصية</a>
+                <a onclick="showLegal('terms')">شروط الاستخدام</a>
+                <a onclick="showLegal('ip')">حقوق الملكية</a>
+                <a href="https://wa.me/201114064990" target="_blank">الدعم المباشر</a>
+            </div>
+            <p>كل الحقوق محفوظة &copy; 2026 | تطوير <a href="https://instagram.com/hhamza_hussein" style="color:var(--gold); text-decoration:none;">HAMZA</a></p>
+        </footer>
+    </div>
+
+    <div id="studentDetailsModal" class="modal">
+        <div class="modal-content" style="max-width:600px;">
+            <h2 id="det-name" style="color:var(--gold);"></h2>
+            <hr style="margin:15px 0; opacity:0.2;">
+            
+            <div id="det-edit-form" style="display: flex; flex-direction: column; gap: 5px;">
+                <label class="editable-label">الاسم</label>
+                <input type="text" id="edit-stu-name" class="editable-input">
+                
+                <label class="editable-label">البريد الإلكتروني</label>
+                <input type="email" id="edit-stu-email" class="editable-input">
+                
+                <label class="editable-label">رقم الهاتف</label>
+                <input type="tel" id="edit-stu-phone" class="editable-input">
+                
+                <label class="editable-label">رقم ولي الأمر</label>
+                <input type="tel" id="edit-stu-parent" class="editable-input">
+
+                <label class="editable-label">الصف الدراسي</label>
+                <select id="edit-stu-grade" class="editable-input" style="background:#222">
+                    <option value="1">1 ثانوي</option>
+                    <option value="2">2 ثانوي</option>
+                    <option value="3">3 ثانوي</option>
+                </select>
+            </div>
+
+            <div class="battery-container"><div class="battery-level" id="det-battery"></div></div>
+            
+            <div style="background:rgba(255,255,255,0.05); padding:15px; border-radius:15px; margin-top:20px;">
+                <h4>إرسال رسالة خاصة للطالب</h4>
+                <div class="input-group"><textarea id="p-msg-text" placeholder="اكتب الرسالة هنا..."></textarea></div>
+                <div class="input-group"><label>مدة الظهور (بالساعات)</label><input type="number" id="p-msg-dur" value="1"></div>
+                <button class="btn-action" style="padding:10px;" onclick="sendPersonalMessage()">إرسال الرسالة</button>
+                <button class="btn-action" style="background:#444; margin-top:5px; padding:10px;" onclick="deletePersonalMessage()">حذف الرسالة الحالية</button>
+            </div>
+
+            <div style="display:flex; gap:10px; margin-top:20px; flex-wrap: wrap;">
+                <button class="action-btn btn-approve" style="flex:1" onclick="saveStudentChanges()">حفظ التعديلات</button>
+                <button class="action-btn btn-reject" style="flex:1" onclick="askBlock()">حظر الطالب</button>
+                <button class="action-btn btn-delete" style="flex:1" onclick="askDelete()">حذف نهائي</button>
+                <button class="action-btn" style="background:#777; flex:1" onclick="closeModal('studentDetailsModal')">إغلاق</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="legalModal" class="modal" onclick="this.style.display='none'">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <h2 id="modalTitle" style="color:var(--gold); margin-bottom:20px; display:flex; align-items:center; gap:10px;"></h2>
+            <div id="modalBody" style="line-height:1.8; opacity:0.9; font-size:0.95rem; white-space: pre-line;"></div>
+            <button class="btn-action" style="margin-top:25px; padding:10px;" onclick="document.getElementById('legalModal').style.display='none'">فهمت ذلك</button>
+        </div>
+    </div>
+
+    <div id="logoutModal" class="modal" onclick="closeLogoutModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <h2 style="color:var(--gold); margin-bottom:15px;"><i class="fas fa-sign-out-alt"></i> تأكيد تسجيل الخروج</h2>
+            <p style="opacity:0.8; line-height:1.7;">هل أنت متأكد إنك عايز تسجيل الخروج من المنصة؟</p>
+            <div style="display:flex; gap:15px; margin-top:25px;">
+                <button class="btn-action" style="background:var(--error);" onclick="confirmLogout()">نعم، خروج</button>
+                <button class="btn-action" style="background:#444;" onclick="closeLogoutModal()">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAwet7_yQsLA81udDcgXNPYo5uWz0iepaY",
+            authDomain: "engl-8c2c0.firebaseapp.com",
+            databaseURL: "https://engl-8c2c0-default-rtdb.firebaseio.com",
+            projectId: "engl-8c2c0",
+            storageBucket: "engl-8c2c0.firebasestorage.app",
+            messagingSenderId: "677642381642",
+            appId: "1:677642381642:web:0c58e7b3f86a6d81c4f9b3"
+        };
+        
+        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+        const auth = firebase.auth();
+        const db = firebase.database();
+        
+        let currentUser = null;
+        let currentUserUID = null;
+        let selectedStudentUID = null;
+        let allLecsCount = 0;
+
+        function showToast(msg) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerText = msg;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
+        }
+
+        function showLegal(type) {
+            const modal = document.getElementById('legalModal');
+            const title = document.getElementById('modalTitle');
+            const body = document.getElementById('modalBody');
+            
+            if (type === 'privacy') {
+                title.innerHTML = '<i class="fas fa-shield-alt"></i> سياسة الخصوصية';
+                body.innerText = `باستخدامك لهذه المنصة، فإنك توافق على الالتزام بالشروط والأحكام التالية:
+
+استخدام المنصة:
+
+- المنصة مخصصة لأغراض تعليمية فقط
+- يمنع استخدام المنصة في أي أنشطة غير قانونية
+- يمنع محاولة اختراق أو تعطيل المنصة
+
+حساب المستخدم:
+
+- المستخدم مسؤول عن الحفاظ على سرية بيانات حسابه
+- يتحمل المستخدم المسؤولية الكاملة عن أي نشاط يتم من خلال حسابه
+
+المحتوى:
+
+- يمنع نشر أي محتوى مسيء أو مخالف للأخلاق أو القوانين
+- تحتفظ الإدارة بحق حذف أي محتوى مخالف دون إشعار مسبق
+
+إيقاف الحساب:
+
+- يحق للإدارة إيقاف أو حذف أي حساب يخالف الشروط
+- دون الحاجة لتوضيح الأسباب
+
+إخلاء المسؤولية:
+
+- لا تضمن المنصة استمرارية الخدمة بدون انقطاع
+- لا تتحمل الإدارة أي أضرار ناتجة عن استخدام المنصة
+`;
+            } else if (type === 'terms') {
+                title.innerHTML = '<i class="fas fa-file-contract"></i> شروط الاستخدام';
+                body.innerText = `باستخدامك لهذه المنصة، فإنك توافق على الالتزام بالشروط والأحكام التالية:
+
+استخدام المنصة:
+
+- المنصة مخصصة لأغراض تعليمية فقط
+- يمنع استخدام المنصة في أي أنشطة غير قانونية
+- يمنع محاولة اختراق أو تعطيل المنصة
+
+حساب المستخدم:
+
+- المستخدم مسؤول عن الحفاظ على سرية بيانات حسابه
+- يتحمل المستخدم المسؤولية الكاملة عن أي نشاط يتم من خلال حسابه
+
+المحتوى:
+
+- يمنع نشر أي محتوى مسيء أو مخالف للأخلاق أو القوانين
+- تحتفظ الإدارة بحق حذف أي محتوى مخالف دون إشعار مسبق
+
+إيقاف الحساب:
+
+- يحق للإدارة إيقاف أو حذف أي حساب يخالف الشروط
+- دون الحاجة لتوضيح الأسباب
+
+إخلاء المسؤولية:
+
+- لا تضمن المنصة استمرارية الخدمة بدون انقطاع
+- لا تتحمل الإدارة أي أضرار ناتجة عن استخدام المنصة
+`;
+            } else if (type === 'ip') {
+                title.innerHTML = '<i class="fas fa-copyright"></i> حقوق الملكية';
+                body.innerText = `جميع الحقوق محفوظة للمنصة، ويشمل ذلك على سبيل المثال لا الحصر:
+
+- المحتوى التعليمي (فيديوهات – نصوص – ملفات)
+- التصميمات والواجهات
+- الأكواد البرمجية
+- اسم المنصة والعلامة التجارية
+
+ويُمنع منعًا باتًا:
+
+- نسخ أو إعادة نشر أي جزء من المحتوى
+- استخدام المحتوى لأغراض تجارية بدون إذن كتابي
+- إعادة توزيع المحتوى بأي وسيلة
+
+أي انتهاك لحقوق الملكية يعرض صاحبه للمساءلة القانونية.`;
+            }
+            modal.style.display = 'flex';
+        }
+
+    function hasSeenAcceptedOnce(uid) {
+        return localStorage.getItem('accepted_seen_' + uid) === 'true';
+    }
+
+    function markAcceptedSeen(uid) {
+        localStorage.setItem('accepted_seen_' + uid, 'true');
+    }
+    function handleAcceptedOnce() {
+        if (currentUserUID && hasSeenAcceptedOnce(currentUserUID)) {
+            navigate('dash-page');
+            enterPlatform();
+            return true;
+        }
+        return false;
+    }
+
+        auth.onAuthStateChanged((user) => {
+            const loader = document.getElementById('page-loader');
+            if (user) {
+                currentUserUID = user.uid;
+                db.ref('users/' + user.uid).on('value', (snap) => {
+                    currentUser = snap.val();
+                    if(!currentUser) { loader.style.display = 'none'; return; }
+                    
+                    if(currentUser.role === 'admin') { document.getElementById('admin-btn').classList.remove('hidden'); }
+                    
+                    if(currentUser.status === 'blocked') { 
+                        showToast('تم حظر حسابك: ' + (currentUser.blockReason || 'تواصل مع الدعم')); 
+                        auth.signOut(); return;
+                    } 
+                    
+                    if(currentUser.status === 'accepted') {if (handleAcceptedOnce()) return;
+markAcceptedSeen(currentUserUID);
+     
+                        loader.style.display = 'none'; 
+                        navigate('status-page');
+                        document.getElementById('stat-pending').classList.add('hidden');
+                        document.getElementById('stat-rejected').classList.add('hidden');
+                        document.getElementById('stat-accepted').classList.remove('hidden');
+                    } else if(currentUser.status === 'rejected') {
+                        loader.style.display = 'none'; navigate('status-page');
+                        document.getElementById('stat-pending').classList.add('hidden');
+                        document.getElementById('stat-accepted').classList.add('hidden');
+                        document.getElementById('stat-rejected').classList.remove('hidden');
+                    } else {
+                        loader.style.display = 'none'; navigate('status-page');
+                        document.getElementById('stat-pending').classList.remove('hidden');
+                        document.getElementById('stat-accepted').classList.add('hidden');
+                        document.getElementById('stat-rejected').classList.add('hidden');
+                    }
+                });
+                checkAnnouncements();
+            } else {
+                currentUser = null; currentUserUID = null;
+                navigate('auth-page'); loader.style.display = 'none';
+            }
+        });
+
+        function checkAnnouncements() {
+            db.ref('announcement').on('value', snap => {
+                const data = snap.val();
+                const bar = document.getElementById('global-announcement');
+                if(data && data.expiry > Date.now()) {
+                    bar.innerText = "📢 " + data.text;
+                    bar.style.display = 'block';
+                } else { bar.style.display = 'none'; }
+            });
+            if(currentUserUID) {
+                db.ref(`users/${currentUserUID}/personalMsg`).on('value', snap => {
+                    const data = snap.val();
+                    const bar = document.getElementById('personal-message-bar');
+                    if(data && data.expiry > Date.now()) {
+                        bar.innerText = data.text;
+                        bar.style.display = 'block';
+                    } else { bar.style.display = 'none'; }
+                });
+            }
+        }
+
+        function navigate(pageId) {
+            document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
+            const next = document.getElementById(pageId);
+            if(next) next.classList.add('active');
+        }
+
+        function switchAuth(type) {
+            document.getElementById('loginForm').classList.toggle('hidden', type === 'reg');
+            document.getElementById('regForm').classList.toggle('hidden', type === 'login');
+            document.getElementById('t-login').style.borderBottom = type === 'login' ? '3px solid var(--primary)' : 'none';
+            document.getElementById('t-reg').style.borderBottom = type === 'reg' ? '3px solid var(--gold)' : 'none';
+        }
+
+        function togglePass(id) {
+            const input = document.getElementById(id);
+            input.type = input.type === 'password' ? 'text' : 'password';
+        }
+
+        document.getElementById('regForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const pass = document.getElementById('r_pass').value;
+            const confirm = document.getElementById('r_pass_confirm').value;
+            if(pass !== confirm) return showToast('كلمات السر غير متطابقة!');
+            
+            const loader = document.getElementById('page-loader');
+            loader.style.display = 'flex';
+            const email = document.getElementById('r_email').value;
+            const phone = document.getElementById('r_phone').value;
+            try {
+                const phoneSnap = await db.ref('users').orderByChild('phone').equalTo(phone).once('value');
+                if(phoneSnap.exists()) { loader.style.display = 'none'; return showToast('رقم الهاتف مسجل مسبقاً!'); }
+                const cred = await auth.createUserWithEmailAndPassword(email, pass);
+                await db.ref('users/' + cred.user.uid).set({
+                    name: document.getElementById('r_name').value,
+                    grade: document.getElementById('r_grade').value,
+                    email: email,
+                    phone: phone,
+                    parent_phone: document.getElementById('r_parent_phone').value,
+                    status: 'pending',
+                    role: 'student',
+                    watchedLectures: {},
+                    joinDate: new Date().toLocaleString('ar-EG')
+                });
+                showToast('تم إنشاء الحساب بنجاح!');
+            } catch (err) {
+                loader.style.display = 'none';
+                showToast('حدث خطأ: ' + err.message);
+            }
+        };
+
+        document.getElementById('loginForm').onsubmit = (e) => {
+            e.preventDefault();
+            const loader = document.getElementById('page-loader');
+            loader.style.display = 'flex';
+            auth.signInWithEmailAndPassword(document.getElementById('l_email').value, document.getElementById('l_pass').value)
+                .catch(err => { loader.style.display = 'none'; showToast('بيانات الدخول خاطئة'); });
+        };
+
+        function enterPlatform() {
+            if(currentUser) {
+                document.getElementById('p-name-head').innerText = currentUser.name;
+                document.getElementById('profile-data').innerHTML = `
+                    <div class="info-item"><label><i class="fas fa-graduation-cap"></i> الصف الدراسي</label><strong>${currentUser.grade} ثانوي</strong></div>
+                    <div class="info-item"><label><i class="fas fa-envelope"></i> البريد الإلكتروني</label><strong>${currentUser.email}</strong></div>
+                    <div class="info-item"><label><i class="fas fa-phone"></i> رقم الهاتف</label><strong>${currentUser.phone}</strong></div>
+                    <div class="info-item"><label><i class="fas fa-user-shield"></i> ولي الأمر</label><strong>${currentUser.parent_phone}</strong></div>
+                `;
+            }
+            loadLectures(); loadTickets(); navigate('dash-page'); updateBattery();
+            document.getElementById('page-loader').style.display = 'none';
+        }
+
+        function logout() {
+            document.getElementById('page-loader').style.display = 'flex';
+            auth.signOut().then(() => { localStorage.clear(); window.location.reload(); });
+        }
+
+        function updateBattery() {
+            if(!currentUser) return;
+            db.ref('lectures').once('value', snap => {
+                allLecsCount = snap.numChildren() || 1;
+                const watched = Object.keys(currentUser.watchedLectures || {}).length;
+                const percent = (watched / allLecsCount) * 100;
+                document.getElementById('battery-level').style.width = percent + '%';
+            });
+        }
+
+        function loadLectures() {
+            if(!currentUser) return;
+            db.ref('lectures').on('value', (snap) => {
+                const container = document.getElementById('lectures-container');
+                container.innerHTML = '';
+                const lecs = snap.val();
+                let count = 0;
+                if(lecs) {
+                    for(let id in lecs) {
+                        let l = lecs[id];
+                        if(l.grade !== currentUser.grade && l.grade !== 'all') continue;
+                        count++;
+                        const isWatched = currentUser.watchedLectures && currentUser.watchedLectures[id];
+                        container.innerHTML += `
+                            <div class="lecture-card">
+                                <div class="lec-thumb-container">
+                                    <div class="lec-badges"><span class="lec-tag tag-grade">${l.grade} ثانوي</span></div>
+                                    <img src="${l.image || ''}" class="lec-img" onerror="this.src='https://via.placeholder.com/400x250/001a4d/c5a059?text=THE+LEGEND'">
+                                </div>
+                                <div class="lec-content">
+                                    <h3 class="lec-title">${l.title}</h3>
+                                    <p class="lec-desc">${l.desc || ''}</p>
+                                </div>
+                                <button class="lec-expand-trigger" onclick="toggleLecActions('${id}')"><i class="fas fa-chevron-down" id="icon-${id}"></i></button>
+                                <div class="lec-actions-area" id="actions-${id}">
+                                    <button onclick="watchVideo('${id}', '${l.link}')" class="btn-action" style="padding:10px;">${isWatched ? 'إعادة المشاهدة' : 'ابدأ الآن'}</button>
+                                </div>
+                            </div>`;
+                    }
+                }
+                document.getElementById('lec-count-badge').innerText = count + ' محتوى';
+            });
+        }
+
+        function toggleLecActions(id) {
+            const area = document.getElementById('actions-'+id);
+            area.classList.toggle('open');
+        }
+
+        function watchVideo(id, link) {
+            db.ref(`users/${currentUserUID}/watchedLectures/${id}`).set(true);
+            window.open(link, '_blank');
+        }
+
+        function loadTickets() {
+            db.ref('tickets').orderByChild('userUID').equalTo(currentUserUID).on('value', (snap) => {
+                const div = document.getElementById('my-tickets'); div.innerHTML = '';
+                snap.forEach(child => {
+                    let t = child.val();
+                    div.innerHTML += `<div class="ticket-box"><small>${t.date}</small><p>${t.msg}</p>${t.reply ? `<div style="color:var(--gold)">الرد: ${t.reply}</div>` : ''}</div>`;
+                });
+            });
+        }
+
+        document.getElementById('ticketForm').onsubmit = (e) => {
+            e.preventDefault();
+            db.ref('tickets').push({ userUID: currentUserUID, userName: currentUser.name, msg: document.getElementById('tk-msg').value, status: 'open', date: new Date().toLocaleString() });
+            document.getElementById('tk-msg').value = ''; showToast('تم الإرسال');
+        };
+
+        function showTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+            document.querySelectorAll('.dash-nav a').forEach(a => a.classList.remove('active-tab'));
+            document.getElementById('tab-'+tab).classList.remove('hidden');
+            document.getElementById('nav-'+tab).classList.add('active-tab');
+        }
+
+        function openLogoutModal() { document.getElementById('logoutModal').style.display = 'flex'; }
+        function closeLogoutModal() { document.getElementById('logoutModal').style.display = 'none'; }
+        function confirmLogout() { logout(); }
+
+        // --- Admin Functions ---
+
+        function openAdmin() {
+            if(!currentUser || currentUser.role !== 'admin') return;
+            navigate('admin-page'); loadAdminStats(); loadPendingUsers();
+        }
+
+        function showAdminTab(tab) {
+            document.querySelectorAll('.admin-tab').forEach(t => t.classList.add('hidden'));
+            document.getElementById('admin-'+tab).classList.remove('hidden');
+            if(tab === 'students') loadStudentCards();
+            if(tab === 'blocked') loadBlockedUsers();
+            if(tab === 'manage-content') loadManageLecs();
+        }
+
+        function loadAdminStats() {
+            db.ref('users').on('value', snap => {
+                let users = snap.val() || {};
+                document.getElementById('stat-users').innerText = Object.keys(users).length;
+                document.getElementById('stat-pending-val').innerText = Object.values(users).filter(u => u.status === 'pending').length;
+            });
+            db.ref('lectures').on('value', snap => {
+                document.getElementById('stat-lecs').innerText = snap.numChildren();
+            });
+            db.ref('tickets').on('value', snap => {
+                document.getElementById('stat-tickets').innerText = snap.numChildren();
+            });
+        }
+
+        function loadPendingUsers() {
+            db.ref('users').orderByChild('status').equalTo('pending').on('value', snap => {
+                const container = document.getElementById('pending-cards-container');
+                container.innerHTML = '';
+                snap.forEach(child => {
+                    let u = child.val();
+                    container.innerHTML += `
+                        <div class="card" style="background:white; color:var(--primary); padding: 20px;">
+                            <h4 style="border-bottom: 2px solid var(--gold); padding-bottom: 5px;">${u.name}</h4>
+                            <div style="font-size: 0.85rem; margin: 10px 0;">
+                                <p><i class="fas fa-graduation-cap"></i> الصف: ${u.grade} ثانوي</p>
+                                <p><i class="fas fa-phone"></i> هاتف: ${u.phone}</p>
+                                <p><i class="fas fa-user-shield"></i> ولي الأمر: ${u.parent_phone}</p>
+                                <p><i class="fas fa-envelope"></i> بريد: ${u.email}</p>
+                            </div>
+                            <div style="display: flex; gap: 5px; margin-top: 10px;">
+                                <button class="action-btn btn-approve" style="flex:1" onclick="updateUserStatus('${child.key}', 'accepted')">تفعيل</button>
+                                <button class="action-btn btn-reject" style="flex:1" onclick="updateUserStatus('${child.key}', 'rejected')">رفض</button>
+                            </div>
+                        </div>`;
+                });
+            });
+        }
+
+        function loadStudentCards() {
+            db.ref('users').on('value', snap => {
+                const container = document.getElementById('students-grid-container');
+                container.innerHTML = '';
+                snap.forEach(child => {
+                    let u = child.val();
+                    if(u.status === 'accepted') {
+                        container.innerHTML += `
+                            <div class="student-card">
+                                <h4>${u.name}</h4>
+                                <p><strong>الهاتف:</strong> ${u.phone}</p>
+                                <p><strong>ولي الأمر:</strong> ${u.parent_phone}</p>
+                                <p><strong>البريد:</strong> ${u.email}</p>
+                                <button class="action-btn btn-details" onclick="openStudentDetails('${child.key}')">عرض وتعديل</button>
+                            </div>`;
+                    }
+                });
+            });
+        }
+
+        function openStudentDetails(uid) {
+            selectedStudentUID = uid;
+            db.ref('users/' + uid).once('value', snap => {
+                let u = snap.val();
+                document.getElementById('det-name').innerText = u.name;
+                document.getElementById('edit-stu-name').value = u.name || '';
+                document.getElementById('edit-stu-email').value = u.email || '';
+                document.getElementById('edit-stu-phone').value = u.phone || '';
+                document.getElementById('edit-stu-parent').value = u.parent_phone || '';
+                document.getElementById('edit-stu-grade').value = u.grade || '1';
+                document.getElementById('studentDetailsModal').style.display = 'flex';
+            });
+        }
+
+        function saveStudentChanges() {
+            if(!selectedStudentUID) return;
+            const updates = {
+                name: document.getElementById('edit-stu-name').value,
+                email: document.getElementById('edit-stu-email').value,
+                phone: document.getElementById('edit-stu-phone').value,
+                parent_phone: document.getElementById('edit-stu-parent').value,
+                grade: document.getElementById('edit-stu-grade').value
+            };
+            db.ref('users/' + selectedStudentUID).update(updates).then(() => {
+                showToast('تم تحديث بيانات الطالب بنجاح');
+                closeModal('studentDetailsModal');
+            });
+        }
+
+        function askDelete() {
+            if(confirm('هل أنت متأكد من حذف الطالب نهائياً؟')) {
+                db.ref('users/'+selectedStudentUID).remove().then(() => {
+                    showToast('تم الحذف'); closeModal('studentDetailsModal');
+                });
+            }
+        }
+
+        function askBlock() {
+            const reason = prompt('ادخل سبب الحظر:');
+            if(reason) {
+                db.ref('users/'+selectedStudentUID).update({ status: 'blocked', blockReason: reason }).then(() => {
+                    showToast('تم الحظر'); closeModal('studentDetailsModal');
+                });
+            }
+        }
+
+        function loadBlockedUsers() {
+            db.ref('users').orderByChild('status').equalTo('blocked').on('value', snap => {
+                const tbody = document.getElementById('blocked-table-body');
+                tbody.innerHTML = '';
+                snap.forEach(child => {
+                    let u = child.val();
+                    tbody.innerHTML += `<tr><td>${u.name}</td><td>${u.blockReason}</td><td><button class="action-btn btn-approve" onclick="updateUserStatus('${child.key}', 'accepted')">فك الحظر</button></td></tr>`;
+                });
+            });
+        }
+
+        function loadManageLecs() {
+            db.ref('lectures').on('value', snap => {
+                const tbody = document.getElementById('manage-lecs-body');
+                tbody.innerHTML = '';
+                snap.forEach(child => {
+                    let l = child.val();
+                    tbody.innerHTML += `<tr><td>${l.title}</td><td>${l.type}</td><td>${l.grade} ثانوي</td><td><button class="action-btn btn-reject" onclick="deleteLec('${child.key}')">حذف</button></td></tr>`;
+                });
+            });
+        }
+
+        function deleteLec(id) {
+            if(confirm('حذف المحتوى؟')) { db.ref('lectures/'+id).remove(); }
+        }
+
+        function sendPersonalMessage() {
+            const text = document.getElementById('p-msg-text').value;
+            const hours = document.getElementById('p-msg-dur').value;
+            const expiry = Date.now() + (hours * 3600000);
+            db.ref(`users/${selectedStudentUID}/personalMsg`).set({ text, expiry }).then(() => showToast('تم الإرسال'));
+        }
+
+        function deletePersonalMessage() {
+            db.ref(`users/${selectedStudentUID}/personalMsg`).remove().then(() => showToast('تم الحذف'));
+        }
+
+        function sendGlobalAnnouncement() {
+            const text = document.getElementById('global-msg-text').value;
+            const hours = document.getElementById('global-msg-duration').value;
+            const expiry = Date.now() + (hours * 3600000);
+            db.ref('announcement').set({ text, expiry }).then(() => showToast('تم النشر'));
+        }
+
+        function deleteGlobalAnnouncement() {
+            db.ref('announcement').remove();
+        }
+
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        
+        function updateUserStatus(uid, status) {
+            db.ref('users/' + uid).update({ status: status }).then(() => {
+                showToast('تم تحديث حالة الطالب');
+            });
+        }
+
+        document.getElementById('contentForm').onsubmit = (e) => {
+            e.preventDefault();
+            db.ref('lectures').push({
+                type: document.getElementById('c_type').value,
+                title: document.getElementById('c_title').value,
+                grade: document.getElementById('c_grade').value,
+                link: document.getElementById('c_link').value,
+                image: document.getElementById('c_img').value || '',
+                desc: document.getElementById('c_desc').value,
+                date: new Date().toISOString()
+            }).then(() => { showToast('تم النشر'); e.target.reset(); });
+        };
+    </script>
+</body>
+</html>
