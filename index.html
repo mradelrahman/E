@@ -720,10 +720,22 @@ markAcceptedSeen(currentUserUID);
             const email = document.getElementById('r_email').value;
             const phone = document.getElementById('r_phone').value;
             try {
-                const phoneSnap = await db.ref('users').orderByChild('phone').equalTo(phone).once('value');
-                if(phoneSnap.exists()) { loader.style.display = 'none'; return showToast('رقم الهاتف مسجل مسبقاً!'); }
                 const cred = await auth.createUserWithEmailAndPassword(email, pass);
-                await db.ref('users/' + cred.user.uid).set({
+                const uid = cred.user.uid;
+
+                const phoneSnap = await db
+                .ref('users')
+                .orderByChild('phone')
+                .equalTo(phone)
+                .once('value');
+              
+                if(phoneSnap.exists()) { 
+                    await cred.user.delete();
+                    loader.style.display = 'none';
+                    return showToast('رقم الهاتف مسجل مسبقاً!'); 
+                }
+
+                await db.ref('users/' + uid).set({
                     name: document.getElementById('r_name').value,
                     grade: document.getElementById('r_grade').value,
                     email: email,
