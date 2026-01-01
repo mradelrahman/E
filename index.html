@@ -41,9 +41,29 @@
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
         @keyframes wave { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } }
 
-        .social-link { color: white; font-size: 1.8rem; transition: 0.4s; display: inline-block; }
-        .social-link:hover { transform: scale(1.3) rotate(15deg); color: var(--gold); }
+       /* 1. اللون الافتراضي - الوضع الليلي (أبيض) */
+.social-link { 
+    color: white !important; 
+    font-size: 1.8rem; 
+    transition: 0.4s; 
+    display: inline-block; 
+}
 
+/* 2. اللون في وضع النهار فقط (ذهبي) */
+body.light-mode .social-link {
+    color: var(--gold) !important;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.1); /* ظل خفيف ليناسب الخلفية الفاتحة */
+}
+
+/* 3. تأثير التمرير (Hover) */
+.social-link:hover { 
+    transform: scale(1.3) rotate(15deg); 
+}
+
+/* في وضع النهار عند التمرير نجعلها أغمق قليلاً للجمالية */
+body.light-mode .social-link:hover {
+    color: var(--primary) !important; 
+}
         .page-section { display: none; flex: 1; opacity: 0; transition: opacity 0.5s ease-in-out; }
         .page-section.active { display: flex; flex-direction: column; opacity: 1; }
 
@@ -152,6 +172,84 @@
         /* Admin Specific styles */
         .editable-input { background: rgba(255,255,255,0.05); border: 1px solid #444; color: white; padding: 8px; border-radius: 8px; width: 100%; margin-bottom: 10px; }
         .editable-label { font-size: 0.8rem; color: var(--gold); display: block; margin-bottom: 3px; }
+
+       /* تعديل المتغيرات لدعم الوضعين */
+:root {
+    --primary: #001a4d;
+    --gold: #c5a059;
+    --success: #2ecc71;
+    --error: #e74c3c;
+    /* المتغيرات التي ستتغير */
+    --bg-color: #050505;
+    --text-color: #ffffff;
+    --card-bg: rgba(255, 255, 255, 0.03);
+    --glass: rgba(255, 255, 255, 0.03);
+    --input-bg: #ffffff;
+}
+
+/* ألوان وضع الإضاءة (Light Mode) */
+body.light-mode {
+    --bg-color: #f4f7f6;
+    --text-color: #1a1a1a;
+    --card-bg: #ffffff;
+    --glass: rgba(0, 0, 0, 0.05);
+}
+
+/* تطبيق المتغيرات على العناصر الأساسية */
+body { 
+    background: var(--bg-color) !important; 
+    color: var(--text-color) !important; 
+}
+.card, .main-card, .student-card { 
+    background: var(--card-bg) !important; 
+    color: var(--text-color) !important; 
+}
+.dash-header { background: var(--primary); } /* الحفاظ على لون الهيدر داكن للجمالية */
+
+/* تصميم زر التبديل (Toggle Switch) */
+.theme-switch-wrapper {
+  display: flex;
+  align-items: center;
+  margin-left: 15px;
+}
+.theme-switch {
+  display: inline-block;
+  height: 28px;
+  position: relative;
+  width: 50px;
+}
+.theme-switch input { display: none; }
+.slider {
+  background-color: #333;
+  bottom: 0;
+  cursor: pointer;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transition: .4s;
+  border-radius: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 5px;
+}
+.slider:before {
+  background-color: #fff;
+  bottom: 3px;
+  content: "";
+  height: 22px;
+  left: 3px;
+  position: absolute;
+  transition: .4s;
+  width: 22px;
+  border-radius: 50%;
+  z-index: 2;
+}
+input:checked + .slider { background-color: var(--gold); }
+input:checked + .slider:before { transform: translateX(22px); }
+.slider i { font-size: 12px; color: #f1c40f; z-index: 1; }
+
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -246,16 +344,29 @@
 
         <section id="dash-page" class="page-section">
             <header class="dash-header">
-                <h2 style="color:var(--gold); cursor:pointer" onclick="navigate('dash-page')">MR. ABDELRAHMAN</h2>
-                <nav class="dash-nav">
-                    <a onclick="showTab('home')" id="nav-home" class="active-tab">الرئيسية</a>
-                    <a onclick="showTab('lectures')" id="nav-lectures">المحاضرات</a>
-                    <a onclick="showTab('profile')" id="nav-profile">ملفي</a>
-                    <a onclick="showTab('support')" id="nav-support">الدعم</a>
-                    <a id="admin-btn" onclick="openAdmin()" class="hidden" style="color:var(--success); border:1px solid var(--success); padding:5px 10px; border-radius:8px;"><i class="fas fa-user-shield"></i> لوحة الإدارة</a>
-                    <a onclick="openLogoutModal()" style="color:var(--gold); border:1px solid var(--gold); padding:5px 15px; border-radius:10px;">خروج</a>
-                </nav>
-            </header>
+    <div style="display: flex; align-items: center;">
+        <h2 style="color:var(--gold); cursor:pointer; margin-left: 15px;" onclick="navigate('dash-page')">MR. ABDELRAHMAN</h2>
+        
+        <div class="theme-switch-wrapper">
+            <label class="theme-switch" for="checkbox">
+                <input type="checkbox" id="checkbox" />
+                <div class="slider">
+                    <i class="fas fa-moon"></i>
+                    <i class="fas fa-sun"></i>
+                </div>
+            </label>
+        </div>
+    </div>
+
+    <nav class="dash-nav">
+        <a onclick="showTab('home')" id="nav-home" class="active-tab">الرئيسية</a>
+        <a onclick="showTab('lectures')" id="nav-lectures">المحاضرات</a>
+        <a onclick="showTab('profile')" id="nav-profile">ملفي</a>
+        <a onclick="showTab('support')" id="nav-support">الدعم</a>
+        <a id="admin-btn" onclick="openAdmin()" class="hidden" style="color:var(--success); border:1px solid var(--success); padding:5px 10px; border-radius:8px;"><i class="fas fa-user-shield"></i> لوحة الإدارة</a>
+        <a onclick="openLogoutModal()" style="color:var(--gold); border:1px solid var(--gold); padding:5px 15px; border-radius:10px;">خروج</a>
+    </nav>
+</header>
 
             <div style="padding:30px 5%;">
                 <div id="personal-message-bar"></div>
@@ -1048,7 +1159,29 @@ markAcceptedSeen(currentUserUID);
                 date: new Date().toISOString()
             }).then(() => { showToast('تم النشر'); e.target.reset(); });
         };
+
+        // --- منطق حفظ وتشغيل الوضع الفاتح والداكن ---
+const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
+const currentTheme = localStorage.getItem('theme');
+
+// التأكد من الوضع المحفوظ عند فتح الصفحة
+if (currentTheme === 'light') {
+    document.body.classList.add('light-mode');
+    if(toggleSwitch) toggleSwitch.checked = true;
+}
+
+// دالة التبديل
+if(toggleSwitch) {
+    toggleSwitch.addEventListener('change', function(e) {
+        if (e.target.checked) {
+            document.body.classList.add('light-mode');
+            localStorage.setItem('theme', 'light');
+        } else {
+            document.body.classList.remove('light-mode');
+            localStorage.setItem('theme', 'dark');
+        }
+    });
+}
     </script>
 </body>
 </html>
-
