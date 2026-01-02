@@ -7,36 +7,35 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-       :root {
-    /* الألوان الأساسية (الوضع الافتراضي - الداكن) */
+    
+    :root {
+    /* --- الوضع الافتراضي (الداكن) --- */
     --bg-body: #050505;
-    --card-bg: rgba(255, 255, 255, 0.03);
+    --card-bg: rgba(255, 255, 255, 0.03); /* زجاجي */
+    --footer-bg: #000000;
     --text-primary: #ffffff;
     --text-secondary: #cccccc;
     --primary: #001a4d;
     --gold: #c5a059;
     --border-color: rgba(255,255,255,0.1);
     --shadow: 0 50px 100px rgba(0,0,0,0.7);
-    
-    /* ألوان الحالة */
-    --success: #2ecc71;
-    --error: #e74c3c;
     --admin-bg: #0a0a0a;
 }
 
-/* --- إعدادات الوضع المضىء (Light Mode) --- */
-/* سيتم تفعيل هذه الألوان تلقائياً عند إضافة كلاس light-mode */
+/* --- الوضع النهاري (Light Mode) --- */
 body.light-mode {
-    --bg-body: #f0f2f5;           /* خلفية رمادية فاتحة جداً */
-    --card-bg: #ffffff;           /* الكروت تصبح بيضاء صريحة */
-    --text-primary: #000000;      /* النصوص تصبح سوداء */
-    --text-secondary: #555555;
-    --primary: #001a4d;           /* الأزرق يبقى كما هو للحفاظ على الهوية */
-    --gold: #b08d55;              /* ذهبي أغمق قليلاً ليظهر على الأبيض */
-    --border-color: #ddd;
-    --shadow: 0 10px 30px rgba(0,0,0,0.08); /* ظل خفيف وناعم */
-    --admin-bg: #e0e0e0;
+    --bg-body: #f3f4f6;           /* رمادي فاتح مريح */
+    --card-bg: #ffffff;           /* أبيض صريح */
+    --footer-bg: #e5e7eb;         /* لون الفوتر في الفاتح */
+    --text-primary: #1f2937;      /* رصاصي غامق جداً للقراءة */
+    --text-secondary: #4b5563;
+    --primary: #001a4d;           /* الأزرق ثابت للحفاظ على الهوية */
+    --gold: #b48a3c;              /* ذهبي أغمق قليلاً للتباين */
+    --border-color: #d1d5db;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --admin-bg: #f9fafb;
 }
+   
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
         body { background: var(--dark); color: white; overflow-x: hidden; display: flex; flex-direction: column; min-height: 100vh; transition: 0.5s; }
 
@@ -172,12 +171,12 @@ body.light-mode {
         /* Admin Specific styles */
         .editable-input { background: rgba(255,255,255,0.05); border: 1px solid #444; color: white; padding: 8px; border-radius: 8px; width: 100%; margin-bottom: 10px; }
         .editable-label { font-size: 0.8rem; color: var(--gold); display: block; margin-bottom: 3px; }
-       
-        /* --- تصميم زر التبديل الاحترافي --- */
+   
+        /* --- 1. تكبير وتصميم زر التبديل --- */
 .theme-switch-container {
     display: flex;
     align-items: center;
-    margin-right: 20px;
+    margin-right: 25px;
 }
 
 .theme-switch-checkbox {
@@ -185,86 +184,105 @@ body.light-mode {
 }
 
 .theme-switch-label {
-    width: 50px;
-    height: 26px;
+    width: 75px;        /* تم تكبير العرض */
+    height: 38px;       /* تم تكبير الطول */
     background-color: #111;
-    border: 1px solid var(--gold);
+    border: 2px solid var(--gold);
     border-radius: 50px;
     position: relative;
     cursor: pointer;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 5px;
+    padding: 0 8px;
     transition: background-color 0.3s;
 }
 
-.theme-switch-label .fa-moon { color: #f1c40f; font-size: 12px; }
-.theme-switch-label .fa-sun { color: #f39c12; font-size: 12px; }
+.theme-switch-label .fa-moon { color: #f1c40f; font-size: 16px; }
+.theme-switch-label .fa-sun { color: #f39c12; font-size: 16px; }
 
 .theme-switch-ball {
     background-color: var(--gold);
-    width: 20px;
-    height: 20px;
+    width: 28px;        /* تكبير الكرة */
+    height: 28px;       /* تكبير الكرة */
     border-radius: 50%;
     position: absolute;
-    top: 2px;
-    left: 2px;
-    transition: transform 0.3s;
+    top: 3px;           /* ضبط المحاذاة */
+    left: 4px;
+    transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
 }
 
-/* عند التفعيل (الوضع المضىء) */
+/* حركة الزر عند التفعيل */
 body.light-mode .theme-switch-label {
     background-color: #fff;
     border-color: var(--primary);
 }
 
 body.light-mode .theme-switch-ball {
-    transform: translateX(24px);
+    transform: translateX(37px); /* مسافة الحركة بعد التكبير */
     background-color: var(--primary);
 }
 
-/* --- تعديلات هامة لضمان ظهور الأيقونات والنصوص --- */
+/* --- 2. إصلاح الفوتر --- */
+.main-footer {
+    background: var(--footer-bg) !important;
+    color: var(--text-secondary) !important;
+    border-top: 1px solid var(--border-color);
+    transition: 0.3s;
+}
+.main-footer a { color: var(--text-primary); }
+
+/* --- 3. تطبيق الألوان على الموقع (بدون تخريب كروت الإدارة) --- */
 body { 
     background: var(--bg-body); 
     color: var(--text-primary); 
-    transition: 0.3s ease-in-out; 
+    transition: 0.3s; 
 }
 
-/* إصلاح اختفاء أيقونات السوشيال */
-.social-link { 
-    color: var(--text-primary); /* تأخذ لون النص المتغير */
-} 
-.social-link:hover { color: var(--gold); }
-
-/* إصلاح خلفيات الكروت لتأخذ المتغير */
-.card, .main-card, .student-card, .lecture-card, .nav-card, .modal-content {
-    background: var(--card-bg) !important;
+/* تطبيق الخلفيات على الكروت العامة فقط */
+.main-card, 
+.card,          /* الكروت العادية */
+.student-card, 
+.lecture-card, 
+.nav-card,
+.modal-content {
+    background: var(--card-bg); /* حذفنا !important للحفاظ على كروت الإدارة */
     border: 1px solid var(--border-color);
     box-shadow: var(--shadow);
     color: var(--text-primary);
 }
 
+/* استثناء كروت الإحصائيات (Stat Cards) للحفاظ على شكلها الأصلي */
+.stat-card {
+    background: var(--primary) !important; /* تبقى زرقاء دائماً */
+    color: white !important;
+    border: none;
+    border-bottom: 4px solid var(--gold);
+}
+.stat-card h4 { color: rgba(255,255,255,0.8); }
+.stat-card h2 { color: var(--gold); }
+
+/* إصلاح النصوص والروابط */
+h1, h2, h3, h4, strong { color: var(--text-primary); }
+.social-link { color: var(--text-primary); }
+.social-link:hover { color: var(--gold); }
+
 /* إصلاح الهيدر */
 .dash-header {
-    background: var(--primary); /* الهيدر يبقى أزرق دائماً للحفاظ على الشكل */
+    background: var(--primary); /* ثابت أزرق */
     border-bottom: 2px solid var(--gold);
 }
-/* لكن الروابط داخله تحتاج تعديل لتبقى ظاهرة */
-.dash-nav a { color: rgba(255,255,255,0.9); } 
+.dash-nav a { color: rgba(255,255,255,0.8); }
 .dash-nav a:hover, .dash-nav a.active-tab { color: var(--gold); }
 
-/* إصلاح المدخلات في الوضع الفاتح */
+/* إصلاح المدخلات (Inputs) في الوضع الفاتح */
 body.light-mode input, 
 body.light-mode select, 
 body.light-mode textarea {
-    background: #fff;
+    background: #ffffff;
     color: #000;
     border: 1px solid #ccc;
-}
-
-body.light-mode h1, body.light-mode h2, body.light-mode h3, body.light-mode h4 {
-    color: var(--primary);
 }
 
     </style>
