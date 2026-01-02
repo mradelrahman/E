@@ -7,16 +7,36 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root {
-            --primary: #001a4d;
-            --gold: #c5a059;
-            --dark: #050505;
-            --glass: rgba(255, 255, 255, 0.03);
-            --success: #2ecc71;
-            --error: #e74c3c;
-            --admin-bg: #0a0a0a;
-        }
+       :root {
+    /* الألوان الأساسية (الوضع الافتراضي - الداكن) */
+    --bg-body: #050505;
+    --card-bg: rgba(255, 255, 255, 0.03);
+    --text-primary: #ffffff;
+    --text-secondary: #cccccc;
+    --primary: #001a4d;
+    --gold: #c5a059;
+    --border-color: rgba(255,255,255,0.1);
+    --shadow: 0 50px 100px rgba(0,0,0,0.7);
+    
+    /* ألوان الحالة */
+    --success: #2ecc71;
+    --error: #e74c3c;
+    --admin-bg: #0a0a0a;
+}
 
+/* --- إعدادات الوضع المضىء (Light Mode) --- */
+/* سيتم تفعيل هذه الألوان تلقائياً عند إضافة كلاس light-mode */
+body.light-mode {
+    --bg-body: #f0f2f5;           /* خلفية رمادية فاتحة جداً */
+    --card-bg: #ffffff;           /* الكروت تصبح بيضاء صريحة */
+    --text-primary: #000000;      /* النصوص تصبح سوداء */
+    --text-secondary: #555555;
+    --primary: #001a4d;           /* الأزرق يبقى كما هو للحفاظ على الهوية */
+    --gold: #b08d55;              /* ذهبي أغمق قليلاً ليظهر على الأبيض */
+    --border-color: #ddd;
+    --shadow: 0 10px 30px rgba(0,0,0,0.08); /* ظل خفيف وناعم */
+    --admin-bg: #e0e0e0;
+}
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
         body { background: var(--dark); color: white; overflow-x: hidden; display: flex; flex-direction: column; min-height: 100vh; transition: 0.5s; }
 
@@ -41,29 +61,9 @@
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
         @keyframes wave { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } }
 
-       /* 1. اللون الافتراضي - الوضع الليلي (أبيض) */
-.social-link { 
-    color: white !important; 
-    font-size: 1.8rem; 
-    transition: 0.4s; 
-    display: inline-block; 
-}
+        .social-link { color: white; font-size: 1.8rem; transition: 0.4s; display: inline-block; }
+        .social-link:hover { transform: scale(1.3) rotate(15deg); color: var(--gold); }
 
-/* 2. اللون في وضع النهار فقط (ذهبي) */
-body.light-mode .social-link {
-    color: var(--gold) !important;
-    text-shadow: 0 2px 5px rgba(0,0,0,0.1); /* ظل خفيف ليناسب الخلفية الفاتحة */
-}
-
-/* 3. تأثير التمرير (Hover) */
-.social-link:hover { 
-    transform: scale(1.3) rotate(15deg); 
-}
-
-/* في وضع النهار عند التمرير نجعلها أغمق قليلاً للجمالية */
-body.light-mode .social-link:hover {
-    color: var(--primary) !important; 
-}
         .page-section { display: none; flex: 1; opacity: 0; transition: opacity 0.5s ease-in-out; }
         .page-section.active { display: flex; flex-direction: column; opacity: 1; }
 
@@ -172,83 +172,100 @@ body.light-mode .social-link:hover {
         /* Admin Specific styles */
         .editable-input { background: rgba(255,255,255,0.05); border: 1px solid #444; color: white; padding: 8px; border-radius: 8px; width: 100%; margin-bottom: 10px; }
         .editable-label { font-size: 0.8rem; color: var(--gold); display: block; margin-bottom: 3px; }
-
-       /* تعديل المتغيرات لدعم الوضعين */
-:root {
-    --primary: #001a4d;
-    --gold: #c5a059;
-    --success: #2ecc71;
-    --error: #e74c3c;
-    /* المتغيرات التي ستتغير */
-    --bg-color: #050505;
-    --text-color: #ffffff;
-    --card-bg: rgba(255, 255, 255, 0.03);
-    --glass: rgba(255, 255, 255, 0.03);
-    --input-bg: #ffffff;
+       
+        /* --- تصميم زر التبديل الاحترافي --- */
+.theme-switch-container {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
 }
 
-/* ألوان وضع الإضاءة (Light Mode) */
-body.light-mode {
-    --bg-color: #f4f7f6;
-    --text-color: #1a1a1a;
-    --card-bg: #ffffff;
-    --glass: rgba(0, 0, 0, 0.05);
+.theme-switch-checkbox {
+    display: none;
 }
 
-/* تطبيق المتغيرات على العناصر الأساسية */
+.theme-switch-label {
+    width: 50px;
+    height: 26px;
+    background-color: #111;
+    border: 1px solid var(--gold);
+    border-radius: 50px;
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+    transition: background-color 0.3s;
+}
+
+.theme-switch-label .fa-moon { color: #f1c40f; font-size: 12px; }
+.theme-switch-label .fa-sun { color: #f39c12; font-size: 12px; }
+
+.theme-switch-ball {
+    background-color: var(--gold);
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    transition: transform 0.3s;
+}
+
+/* عند التفعيل (الوضع المضىء) */
+body.light-mode .theme-switch-label {
+    background-color: #fff;
+    border-color: var(--primary);
+}
+
+body.light-mode .theme-switch-ball {
+    transform: translateX(24px);
+    background-color: var(--primary);
+}
+
+/* --- تعديلات هامة لضمان ظهور الأيقونات والنصوص --- */
 body { 
-    background: var(--bg-color) !important; 
-    color: var(--text-color) !important; 
+    background: var(--bg-body); 
+    color: var(--text-primary); 
+    transition: 0.3s ease-in-out; 
 }
-.card, .main-card, .student-card { 
-    background: var(--card-bg) !important; 
-    color: var(--text-color) !important; 
-}
-.dash-header { background: var(--primary); } /* الحفاظ على لون الهيدر داكن للجمالية */
 
-/* تصميم زر التبديل (Toggle Switch) */
-.theme-switch-wrapper {
-  display: flex;
-  align-items: center;
-  margin-left: 15px;
+/* إصلاح اختفاء أيقونات السوشيال */
+.social-link { 
+    color: var(--text-primary); /* تأخذ لون النص المتغير */
+} 
+.social-link:hover { color: var(--gold); }
+
+/* إصلاح خلفيات الكروت لتأخذ المتغير */
+.card, .main-card, .student-card, .lecture-card, .nav-card, .modal-content {
+    background: var(--card-bg) !important;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow);
+    color: var(--text-primary);
 }
-.theme-switch {
-  display: inline-block;
-  height: 28px;
-  position: relative;
-  width: 50px;
+
+/* إصلاح الهيدر */
+.dash-header {
+    background: var(--primary); /* الهيدر يبقى أزرق دائماً للحفاظ على الشكل */
+    border-bottom: 2px solid var(--gold);
 }
-.theme-switch input { display: none; }
-.slider {
-  background-color: #333;
-  bottom: 0;
-  cursor: pointer;
-  left: 0;
-  position: absolute;
-  right: 0;
-  top: 0;
-  transition: .4s;
-  border-radius: 34px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 5px;
+/* لكن الروابط داخله تحتاج تعديل لتبقى ظاهرة */
+.dash-nav a { color: rgba(255,255,255,0.9); } 
+.dash-nav a:hover, .dash-nav a.active-tab { color: var(--gold); }
+
+/* إصلاح المدخلات في الوضع الفاتح */
+body.light-mode input, 
+body.light-mode select, 
+body.light-mode textarea {
+    background: #fff;
+    color: #000;
+    border: 1px solid #ccc;
 }
-.slider:before {
-  background-color: #fff;
-  bottom: 3px;
-  content: "";
-  height: 22px;
-  left: 3px;
-  position: absolute;
-  transition: .4s;
-  width: 22px;
-  border-radius: 50%;
-  z-index: 2;
+
+body.light-mode h1, body.light-mode h2, body.light-mode h3, body.light-mode h4 {
+    color: var(--primary);
 }
-input:checked + .slider { background-color: var(--gold); }
-input:checked + .slider:before { transform: translateX(22px); }
-.slider i { font-size: 12px; color: #f1c40f; z-index: 1; }
 
     </style>
 </head>
@@ -343,17 +360,16 @@ input:checked + .slider:before { transform: translateX(22px); }
         </section>
 
         <section id="dash-page" class="page-section">
-            <header class="dash-header">
-    <div style="display: flex; align-items: center;">
-        <h2 style="color:var(--gold); cursor:pointer; margin-left: 15px;" onclick="navigate('dash-page')">MR. ABDELRAHMAN</h2>
+    <header class="dash-header">
+    <div style="display:flex; align-items:center; gap: 20px;">
+        <h2 style="color:var(--gold); cursor:pointer; margin:0;" onclick="navigate('dash-page')">MR. ABDELRAHMAN</h2>
         
-        <div class="theme-switch-wrapper">
-            <label class="theme-switch" for="checkbox">
-                <input type="checkbox" id="checkbox" />
-                <div class="slider">
-                    <i class="fas fa-moon"></i>
-                    <i class="fas fa-sun"></i>
-                </div>
+        <div class="theme-switch-container">
+            <input type="checkbox" class="theme-switch-checkbox" id="theme-toggle" onchange="toggleTheme()">
+            <label for="theme-toggle" class="theme-switch-label">
+                <i class="fas fa-moon"></i>
+                <i class="fas fa-sun"></i>
+                <div class="theme-switch-ball"></div>
             </label>
         </div>
     </div>
@@ -363,7 +379,7 @@ input:checked + .slider:before { transform: translateX(22px); }
         <a onclick="showTab('lectures')" id="nav-lectures">المحاضرات</a>
         <a onclick="showTab('profile')" id="nav-profile">ملفي</a>
         <a onclick="showTab('support')" id="nav-support">الدعم</a>
-        <a id="admin-btn" onclick="openAdmin()" class="hidden" style="color:var(--success); border:1px solid var(--success); padding:5px 10px; border-radius:8px;"><i class="fas fa-user-shield"></i> لوحة الإدارة</a>
+        <a id="admin-btn" onclick="openAdmin()" class="hidden" style="color:#fff; border:1px solid #fff; padding:5px 10px; border-radius:8px;"><i class="fas fa-user-shield"></i> الإدارة</a>
         <a onclick="openLogoutModal()" style="color:var(--gold); border:1px solid var(--gold); padding:5px 15px; border-radius:10px;">خروج</a>
     </nav>
 </header>
@@ -1159,29 +1175,35 @@ markAcceptedSeen(currentUserUID);
                 date: new Date().toISOString()
             }).then(() => { showToast('تم النشر'); e.target.reset(); });
         };
-
-        // --- منطق حفظ وتشغيل الوضع الفاتح والداكن ---
-const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
-const currentTheme = localStorage.getItem('theme');
-
-// التأكد من الوضع المحفوظ عند فتح الصفحة
-if (currentTheme === 'light') {
-    document.body.classList.add('light-mode');
-    if(toggleSwitch) toggleSwitch.checked = true;
+      
+        // --- كود الوضع الليلي والنهاري (النسخة المحسنة) ---
+function toggleTheme() {
+    const body = document.body;
+    const checkbox = document.getElementById('theme-toggle');
+    
+    // التبديل بإضافة/إزالة الكلاس
+    body.classList.toggle('light-mode');
+    
+    // حفظ الوضع في الذاكرة
+    if (body.classList.contains('light-mode')) {
+        localStorage.setItem('siteTheme', 'light');
+        showToast('تم تفعيل الوضع النهاري ☀️');
+    } else {
+        localStorage.setItem('siteTheme', 'dark');
+        showToast('تم تفعيل الوضع الليلي 🌙');
+    }
 }
 
-// دالة التبديل
-if(toggleSwitch) {
-    toggleSwitch.addEventListener('change', function(e) {
-        if (e.target.checked) {
-            document.body.classList.add('light-mode');
-            localStorage.setItem('theme', 'light');
-        } else {
-            document.body.classList.remove('light-mode');
-            localStorage.setItem('theme', 'dark');
-        }
-    });
-}
+// دالة تعمل فور فتح الموقع لاسترجاع الوضع المحفوظ
+(function loadTheme() {
+    const savedTheme = localStorage.getItem('siteTheme');
+    const checkbox = document.getElementById('theme-toggle');
+    
+    if (savedTheme === 'light') {
+        document.body.classList.add('light-mode');
+        if(checkbox) checkbox.checked = true;
+    }
+})();
     </script>
 </body>
 </html>
