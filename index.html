@@ -611,4 +611,524 @@ body.light-mode {
 إخلاء المسؤولية:
 
 - لا تضمن المنصة استمرارية الخدمة بدون انقطاع
-- لا
+- لا تتحمل الإدارة أي أضرار ناتجة عن استخدام المنصة
+`;
+            } else if (type === 'terms') {
+                title.innerHTML = '<i class="fas fa-file-contract"></i> شروط الاستخدام';
+                body.innerText = `باستخدامك لهذه المنصة، فإنك توافق على الالتزام بالشروط والأحكام التالية:
+
+استخدام المنصة:
+
+- المنصة مخصصة لأغراض تعليمية فقط
+- يمنع استخدام المنصة في أي أنشطة غير قانونية
+- يمنع محاولة اختراق أو تعطيل المنصة
+
+حساب المستخدم:
+
+- المستخدم مسؤول عن الحفاظ على سرية بيانات حسابه
+- يتحمل المستخدم المسؤولية الكاملة عن أي نشاط يتم من خلال حسابه
+
+المحتوى:
+
+- يمنع نشر أي محتوى مسيء أو مخالف للأخلاق أو القوانين
+- تحتفظ الإدارة بحق حذف أي محتوى مخالف دون إشعار مسبق
+
+إيقاف الحساب:
+
+- يحق للإدارة إيقاف أو حذف أي حساب يخالف الشروط
+- دون الحاجة لتوضيح الأسباب
+
+إخلاء المسؤولية:
+
+- لا تضمن المنصة استمرارية الخدمة بدون انقطاع
+- لا تتحمل الإدارة أي أضرار ناتجة عن استخدام المنصة
+`;
+            } else if (type === 'ip') {
+                title.innerHTML = '<i class="fas fa-copyright"></i> حقوق الملكية';
+                body.innerText = `جميع الحقوق محفوظة للمنصة، ويشمل ذلك على سبيل المثال لا الحصر:
+
+- المحتوى التعليمي (فيديوهات – نصوص – ملفات)
+- التصميمات والواجهات
+- الأكواد البرمجية
+- اسم المنصة والعلامة التجارية
+
+ويُمنع منعًا باتًا:
+
+- نسخ أو إعادة نشر أي جزء من المحتوى
+- استخدام المحتوى لأغراض تجارية بدون إذن كتابي
+- إعادة توزيع المحتوى بأي وسيلة
+
+أي انتهاك لحقوق الملكية يعرض صاحبه للمساءلة القانونية.`;
+            }
+            modal.style.display = 'flex';
+        }
+
+    function hasSeenAcceptedOnce(uid) {
+        return localStorage.getItem('accepted_seen_' + uid) === 'true';
+    }
+
+    function markAcceptedSeen(uid) {
+        localStorage.setItem('accepted_seen_' + uid, 'true');
+    }
+    function handleAcceptedOnce() {
+        if (currentUserUID && hasSeenAcceptedOnce(currentUserUID)) {
+            navigate('dash-page');
+            enterPlatform();
+            return true;
+        }
+        return false;
+    }
+
+        auth.onAuthStateChanged((user) => {
+            const loader = document.getElementById('page-loader');
+            if (user) {
+                currentUserUID = user.uid;
+                db.ref('users/' + user.uid).on('value', (snap) => {
+                    currentUser = snap.val();
+                    if(!currentUser) { loader.style.display = 'none'; return; }
+                    
+                    if(currentUser.role === 'admin') { document.getElementById('admin-btn').classList.remove('hidden'); }
+                    
+                    if(currentUser.status === 'blocked') { 
+                        showToast('تم حظر حسابك: ' + (currentUser.blockReason || 'تواصل مع الدعم')); 
+                        auth.signOut(); return;
+                    } 
+                    
+                    if(currentUser.status === 'accepted') {if (handleAcceptedOnce()) return;
+markAcceptedSeen(currentUserUID);
+     
+                        loader.style.display = 'none'; 
+                        navigate('status-page');
+                        document.getElementById('stat-pending').classList.add('hidden');
+                        document.getElementById('stat-rejected').classList.add('hidden');
+                        document.getElementById('stat-accepted').classList.remove('hidden');
+                    } else if(currentUser.status === 'rejected') {
+                        loader.style.display = 'none'; navigate('status-page');
+                        document.getElementById('stat-pending').classList.add('hidden');
+                        document.getElementById('stat-accepted').classList.add('hidden');
+                        document.getElementById('stat-rejected').classList.remove('hidden');
+                    } else {
+                        loader.style.display = 'none'; navigate('status-page');
+                        document.getElementById('stat-pending').classList.remove('hidden');
+                        document.getElementById('stat-accepted').classList.add('hidden');
+                        document.getElementById('stat-rejected').classList.add('hidden');
+                    }
+                });
+                checkAnnouncements();
+            } else {
+                currentUser = null; currentUserUID = null;
+                navigate('auth-page'); loader.style.display = 'none';
+            }
+        });
+
+        function checkAnnouncements() {
+            db.ref('announcement').on('value', snap => {
+                const data = snap.val();
+                const bar = document.getElementById('global-announcement');
+                if(data && data.expiry > Date.now()) {
+                    bar.innerText = "📢 " + data.text;
+                    bar.style.display = 'block';
+                } else { bar.style.display = 'none'; }
+            });
+            if(currentUserUID) {
+                db.ref(`users/${currentUserUID}/personalMsg`).on('value', snap => {
+                    const data = snap.val();
+                    const bar = document.getElementById('personal-message-bar');
+                    if(data && data.expiry > Date.now()) {
+                        bar.innerText = data.text;
+                        bar.style.display = 'block';
+                    } else { bar.style.display = 'none'; }
+                });
+            }
+        }
+
+        function navigate(pageId) {
+            document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
+            const next = document.getElementById(pageId);
+            if(next) next.classList.add('active');
+        }
+
+        function switchAuth(type) {
+            document.getElementById('loginForm').classList.toggle('hidden', type === 'reg');
+            document.getElementById('regForm').classList.toggle('hidden', type === 'login');
+            document.getElementById('t-login').style.borderBottom = type === 'login' ? '3px solid var(--primary)' : 'none';
+            document.getElementById('t-reg').style.borderBottom = type === 'reg' ? '3px solid var(--gold)' : 'none';
+        }
+
+        function togglePass(id) {
+            const input = document.getElementById(id);
+            input.type = input.type === 'password' ? 'text' : 'password';
+        }
+
+        document.getElementById('regForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const pass = document.getElementById('r_pass').value;
+            const confirm = document.getElementById('r_pass_confirm').value;
+            if(pass !== confirm) return showToast('كلمات السر غير متطابقة!');
+            
+            const loader = document.getElementById('page-loader');
+            loader.style.display = 'flex';
+            const email = document.getElementById('r_email').value;
+            const phone = document.getElementById('r_phone').value;
+            try {
+                const cred = await auth.createUserWithEmailAndPassword(email, pass);
+                const uid = cred.user.uid;
+
+                const phoneSnap = await db
+                .ref('users')
+                .orderByChild('phone')
+                .equalTo(phone)
+                .once('value');
+              
+                if(phoneSnap.exists()) { 
+                    await cred.user.delete();
+                    loader.style.display = 'none';
+                    return showToast('رقم الهاتف مسجل مسبقاً!'); 
+                }
+
+                await db.ref('users/' + uid).set({
+                    name: document.getElementById('r_name').value,
+                    grade: document.getElementById('r_grade').value,
+                    email: email,
+                    phone: phone,
+                    parent_phone: document.getElementById('r_parent_phone').value,
+                    status: 'pending',
+                    role: 'student',
+                    watchedLectures: {},
+                    joinDate: new Date().toLocaleString('ar-EG')
+                });
+                showToast('تم إنشاء الحساب بنجاح!');
+            } catch (err) {
+                loader.style.display = 'none';
+                showToast('حدث خطأ: ' + err.message);
+            }
+        };
+
+        document.getElementById('loginForm').onsubmit = (e) => {
+            e.preventDefault();
+            const loader = document.getElementById('page-loader');
+            loader.style.display = 'flex';
+            auth.signInWithEmailAndPassword(document.getElementById('l_email').value, document.getElementById('l_pass').value)
+                .catch(err => { loader.style.display = 'none'; showToast('بيانات الدخول خاطئة'); });
+        };
+
+        function enterPlatform() {
+            if(currentUser) {
+                document.getElementById('p-name-head').innerText = currentUser.name;
+                document.getElementById('profile-data').innerHTML = `
+                    <div class="info-item"><label><i class="fas fa-graduation-cap"></i> الصف الدراسي</label><strong>${currentUser.grade} ثانوي</strong></div>
+                    <div class="info-item"><label><i class="fas fa-envelope"></i> البريد الإلكتروني</label><strong>${currentUser.email}</strong></div>
+                    <div class="info-item"><label><i class="fas fa-phone"></i> رقم الهاتف</label><strong>${currentUser.phone}</strong></div>
+                    <div class="info-item"><label><i class="fas fa-user-shield"></i> ولي الأمر</label><strong>${currentUser.parent_phone}</strong></div>
+                `;
+            }
+            loadLectures(); loadTickets(); navigate('dash-page'); updateBattery();
+            document.getElementById('page-loader').style.display = 'none';
+        }
+
+        function logout() {
+            document.getElementById('page-loader').style.display = 'flex';
+            auth.signOut().then(() => { localStorage.clear(); window.location.reload(); });
+        }
+
+        function updateBattery() {
+            if(!currentUser) return;
+            db.ref('lectures').once('value', snap => {
+                allLecsCount = snap.numChildren() || 1;
+                const watched = Object.keys(currentUser.watchedLectures || {}).length;
+                const percent = (watched / allLecsCount) * 100;
+                document.getElementById('battery-level').style.width = percent + '%';
+            });
+        }
+
+        function loadLectures() {
+            if(!currentUser) return;
+            db.ref('lectures').on('value', (snap) => {
+                const container = document.getElementById('lectures-container');
+                container.innerHTML = '';
+                const lecs = snap.val();
+                let count = 0;
+                if(lecs) {
+                    for(let id in lecs) {
+                        let l = lecs[id];
+                        if(l.grade !== currentUser.grade && l.grade !== 'all') continue;
+                        count++;
+                        const isWatched = currentUser.watchedLectures && currentUser.watchedLectures[id];
+                        container.innerHTML += `
+                            <div class="lecture-card">
+                                <div class="lec-thumb-container">
+                                    <div class="lec-badges"><span class="lec-tag tag-grade">${l.grade} ثانوي</span></div>
+                                    <img src="${l.image || ''}" class="lec-img" onerror="this.src='https://via.placeholder.com/400x250/001a4d/c5a059?text=THE+LEGEND'">
+                                </div>
+                                <div class="lec-content">
+                                    <h3 class="lec-title">${l.title}</h3>
+                                    <p class="lec-desc">${l.desc || ''}</p>
+                                </div>
+                                <button class="lec-expand-trigger" onclick="toggleLecActions('${id}')"><i class="fas fa-chevron-down" id="icon-${id}"></i></button>
+                                <div class="lec-actions-area" id="actions-${id}">
+                                    <button onclick="watchVideo('${id}', '${l.link}')" class="btn-action" style="padding:10px;">${isWatched ? 'إعادة المشاهدة' : 'ابدأ الآن'}</button>
+                                </div>
+                            </div>`;
+                    }
+                }
+                document.getElementById('lec-count-badge').innerText = count + ' محتوى';
+            });
+        }
+
+        function toggleLecActions(id) {
+            const area = document.getElementById('actions-'+id);
+            area.classList.toggle('open');
+        }
+
+        function watchVideo(id, link) {
+            db.ref(`users/${currentUserUID}/watchedLectures/${id}`).set(true);
+            window.open(link, '_blank');
+        }
+
+        function loadTickets() {
+            db.ref('tickets').orderByChild('userUID').equalTo(currentUserUID).on('value', (snap) => {
+                const div = document.getElementById('my-tickets'); div.innerHTML = '';
+                snap.forEach(child => {
+                    let t = child.val();
+                    div.innerHTML += `<div class="ticket-box"><small>${t.date}</small><p>${t.msg}</p>${t.reply ? `<div style="color:var(--gold)">الرد: ${t.reply}</div>` : ''}</div>`;
+                });
+            });
+        }
+
+        document.getElementById('ticketForm').onsubmit = (e) => {
+            e.preventDefault();
+            db.ref('tickets').push({ userUID: currentUserUID, userName: currentUser.name, msg: document.getElementById('tk-msg').value, status: 'open', date: new Date().toLocaleString() });
+            document.getElementById('tk-msg').value = ''; showToast('تم الإرسال');
+        };
+
+        function showTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+            document.querySelectorAll('.dash-nav a').forEach(a => a.classList.remove('active-tab'));
+            document.getElementById('tab-'+tab).classList.remove('hidden');
+            document.getElementById('nav-'+tab).classList.add('active-tab');
+        }
+
+        function openLogoutModal() { document.getElementById('logoutModal').style.display = 'flex'; }
+        function closeLogoutModal() { document.getElementById('logoutModal').style.display = 'none'; }
+        function confirmLogout() { logout(); }
+
+        // --- Admin Functions ---
+
+        function openAdmin() {
+            if(!currentUser || currentUser.role !== 'admin') return;
+            navigate('admin-page'); loadAdminStats(); loadPendingUsers();
+        }
+
+        function showAdminTab(tab) {
+            document.querySelectorAll('.admin-tab').forEach(t => t.classList.add('hidden'));
+            document.getElementById('admin-'+tab).classList.remove('hidden');
+            if(tab === 'students') loadStudentCards();
+            if(tab === 'blocked') loadBlockedUsers();
+            if(tab === 'manage-content') loadManageLecs();
+        }
+
+        function loadAdminStats() {
+            db.ref('users').on('value', snap => {
+                let users = snap.val() || {};
+                document.getElementById('stat-users').innerText = Object.keys(users).length;
+                document.getElementById('stat-pending-val').innerText = Object.values(users).filter(u => u.status === 'pending').length;
+            });
+            db.ref('lectures').on('value', snap => {
+                document.getElementById('stat-lecs').innerText = snap.numChildren();
+            });
+            db.ref('tickets').on('value', snap => {
+                document.getElementById('stat-tickets').innerText = snap.numChildren();
+            });
+        }
+
+        function loadPendingUsers() {
+            db.ref('users').orderByChild('status').equalTo('pending').on('value', snap => {
+                const container = document.getElementById('pending-cards-container');
+                container.innerHTML = '';
+                snap.forEach(child => {
+                    let u = child.val();
+                    container.innerHTML += `
+                        <div class="card" style="background:white; color:var(--primary); padding: 20px;">
+                            <h4 style="border-bottom: 2px solid var(--gold); padding-bottom: 5px;">${u.name}</h4>
+                            <div style="font-size: 0.85rem; margin: 10px 0;">
+                                <p><i class="fas fa-graduation-cap"></i> الصف: ${u.grade} ثانوي</p>
+                                <p><i class="fas fa-phone"></i> هاتف: ${u.phone}</p>
+                                <p><i class="fas fa-user-shield"></i> ولي الأمر: ${u.parent_phone}</p>
+                                <p><i class="fas fa-envelope"></i> بريد: ${u.email}</p>
+                            </div>
+                            <div style="display: flex; gap: 5px; margin-top: 10px;">
+                                <button class="action-btn btn-approve" style="flex:1" onclick="updateUserStatus('${child.key}', 'accepted')">تفعيل</button>
+                                <button class="action-btn btn-reject" style="flex:1" onclick="updateUserStatus('${child.key}', 'rejected')">رفض</button>
+                            </div>
+                        </div>`;
+                });
+            });
+        }
+
+        function loadStudentCards() {
+            db.ref('users').on('value', snap => {
+                const container = document.getElementById('students-grid-container');
+                container.innerHTML = '';
+                snap.forEach(child => {
+                    let u = child.val();
+                    if(u.status === 'accepted') {
+                        container.innerHTML += `
+                            <div class="student-card">
+                                <h4>${u.name}</h4>
+                                <p><strong>الهاتف:</strong> ${u.phone}</p>
+                                <p><strong>ولي الأمر:</strong> ${u.parent_phone}</p>
+                                <p><strong>البريد:</strong> ${u.email}</p>
+                                <button class="action-btn btn-details" onclick="openStudentDetails('${child.key}')">عرض وتعديل</button>
+                            </div>`;
+                    }
+                });
+            });
+        }
+
+        function openStudentDetails(uid) {
+            selectedStudentUID = uid;
+            db.ref('users/' + uid).once('value', snap => {
+                let u = snap.val();
+                document.getElementById('det-name').innerText = u.name;
+                document.getElementById('edit-stu-name').value = u.name || '';
+                document.getElementById('edit-stu-email').value = u.email || '';
+                document.getElementById('edit-stu-phone').value = u.phone || '';
+                document.getElementById('edit-stu-parent').value = u.parent_phone || '';
+                document.getElementById('edit-stu-grade').value = u.grade || '1';
+                document.getElementById('studentDetailsModal').style.display = 'flex';
+            });
+        }
+
+        function saveStudentChanges() {
+            if(!selectedStudentUID) return;
+            const updates = {
+                name: document.getElementById('edit-stu-name').value,
+                email: document.getElementById('edit-stu-email').value,
+                phone: document.getElementById('edit-stu-phone').value,
+                parent_phone: document.getElementById('edit-stu-parent').value,
+                grade: document.getElementById('edit-stu-grade').value
+            };
+            db.ref('users/' + selectedStudentUID).update(updates).then(() => {
+                showToast('تم تحديث بيانات الطالب بنجاح');
+                closeModal('studentDetailsModal');
+            });
+        }
+
+        function askDelete() {
+            if(confirm('هل أنت متأكد من حذف الطالب نهائياً؟')) {
+                db.ref('users/'+selectedStudentUID).remove().then(() => {
+                    showToast('تم الحذف'); closeModal('studentDetailsModal');
+                });
+            }
+        }
+
+        function askBlock() {
+            const reason = prompt('ادخل سبب الحظر:');
+            if(reason) {
+                db.ref('users/'+selectedStudentUID).update({ status: 'blocked', blockReason: reason }).then(() => {
+                    showToast('تم الحظر'); closeModal('studentDetailsModal');
+                });
+            }
+        }
+
+        function loadBlockedUsers() {
+            db.ref('users').orderByChild('status').equalTo('blocked').on('value', snap => {
+                const tbody = document.getElementById('blocked-table-body');
+                tbody.innerHTML = '';
+                snap.forEach(child => {
+                    let u = child.val();
+                    tbody.innerHTML += `<tr><td>${u.name}</td><td>${u.blockReason}</td><td><button class="action-btn btn-approve" onclick="updateUserStatus('${child.key}', 'accepted')">فك الحظر</button></td></tr>`;
+                });
+            });
+        }
+
+        function loadManageLecs() {
+            db.ref('lectures').on('value', snap => {
+                const tbody = document.getElementById('manage-lecs-body');
+                tbody.innerHTML = '';
+                snap.forEach(child => {
+                    let l = child.val();
+                    tbody.innerHTML += `<tr><td>${l.title}</td><td>${l.type}</td><td>${l.grade} ثانوي</td><td><button class="action-btn btn-reject" onclick="deleteLec('${child.key}')">حذف</button></td></tr>`;
+                });
+            });
+        }
+
+        function deleteLec(id) {
+            if(confirm('حذف المحتوى؟')) { db.ref('lectures/'+id).remove(); }
+        }
+
+        function sendPersonalMessage() {
+            const text = document.getElementById('p-msg-text').value;
+            const hours = document.getElementById('p-msg-dur').value;
+            const expiry = Date.now() + (hours * 3600000);
+            db.ref(`users/${selectedStudentUID}/personalMsg`).set({ text, expiry }).then(() => showToast('تم الإرسال'));
+        }
+
+        function deletePersonalMessage() {
+            db.ref(`users/${selectedStudentUID}/personalMsg`).remove().then(() => showToast('تم الحذف'));
+        }
+
+        function sendGlobalAnnouncement() {
+            const text = document.getElementById('global-msg-text').value;
+            const hours = document.getElementById('global-msg-duration').value;
+            const expiry = Date.now() + (hours * 3600000);
+            db.ref('announcement').set({ text, expiry }).then(() => showToast('تم النشر'));
+        }
+
+        function deleteGlobalAnnouncement() {
+            db.ref('announcement').remove();
+        }
+
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        
+        function updateUserStatus(uid, status) {
+            db.ref('users/' + uid).update({ status: status }).then(() => {
+                showToast('تم تحديث حالة الطالب');
+            });
+        }
+
+        document.getElementById('contentForm').onsubmit = (e) => {
+            e.preventDefault();
+            db.ref('lectures').push({
+                type: document.getElementById('c_type').value,
+                title: document.getElementById('c_title').value,
+                grade: document.getElementById('c_grade').value,
+                link: document.getElementById('c_link').value,
+                image: document.getElementById('c_img').value || '',
+                desc: document.getElementById('c_desc').value,
+                date: new Date().toISOString()
+            }).then(() => { showToast('تم النشر'); e.target.reset(); });
+        };
+      
+        // --- كود الوضع الليلي والنهاري (النسخة المحسنة) ---
+function toggleTheme() {
+    const body = document.body;
+    const checkbox = document.getElementById('theme-toggle');
+    
+    // التبديل بإضافة/إزالة الكلاس
+    body.classList.toggle('light-mode');
+    
+    // حفظ الوضع في الذاكرة
+    if (body.classList.contains('light-mode')) {
+        localStorage.setItem('siteTheme', 'light');
+        showToast('تم تفعيل الوضع النهاري ☀️');
+    } else {
+        localStorage.setItem('siteTheme', 'dark');
+        showToast('تم تفعيل الوضع الليلي 🌙');
+    }
+}
+
+// دالة تعمل فور فتح الموقع لاسترجاع الوضع المحفوظ
+(function loadTheme() {
+    const savedTheme = localStorage.getItem('siteTheme');
+    const checkbox = document.getElementById('theme-toggle');
+    
+    if (savedTheme === 'light') {
+        document.body.classList.add('light-mode');
+        if(checkbox) checkbox.checked = true;
+    }
+})();
+    </script>
+</body>
+</html>
+
