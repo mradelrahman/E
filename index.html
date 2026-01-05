@@ -191,6 +191,104 @@ body.light-mode {
         .hidden { display: none !important; }
         @media (max-width: 850px) { .main-card { grid-template-columns: 1fr; } .master-side { display: none; } .profile-container { grid-template-columns: 1fr; text-align: center; justify-items: center; } .dash-header { flex-direction: column; gap: 10px; } }
         body { user-select: none; -webkit-user-select: none; }
+
+        /* === Mobile UX Enhancement === */
+
+/* تحسينات عامة للموبايل */
+@media (max-width: 768px) {
+    /* تحسين انسيابية الخط العربي والمقاسات */
+    html { font-size: 14px; }
+    body { line-height: 1.6; }
+    
+    /* تحسين الـ Hero Section لتناسب طول شاشة الهاتف */
+    .hero-section { padding: 20px 10px; min-height: auto; }
+    
+    /* ضبط القائمة العلوية (Navbar) لتكون سهلة الاستخدام باليد الواحدة */
+    .dash-header {
+        padding: 10px 15px;
+        position: sticky;
+        top: 0;
+        backdrop-filter: blur(15px);
+        background: rgba(0, 26, 77, 0.9);
+    }
+    
+    .dash-nav {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        width: 100%;
+        padding: 10px 0;
+        justify-content: flex-start;
+        gap: 10px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none; /* إخفاء شريط التمرير */
+    }
+    
+    .dash-nav::-webkit-scrollbar { display: none; }
+    
+    .dash-nav a {
+        white-space: nowrap;
+        padding: 8px 15px !important;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 20px;
+        margin: 0 !important;
+        font-size: 0.85rem;
+    }
+
+    /* جعل الأزرار (Touch Friendly) */
+    .btn-action, .action-btn, .lec-expand-trigger {
+        min-height: 48px; /* مقاس قياسي للمس */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 8px;
+    }
+
+    /* تحسين عرض الكروت والشبكة على الشاشات الصغيرة */
+    .main-card { border-radius: 20px; border: none; }
+    .form-side { padding: 25px 20px; }
+    .nav-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .lecture-card { margin-bottom: 15px; border-radius: 18px; }
+    
+    /* ضبط الصور والفيديو لتكون Responsive 100% */
+    img, video, iframe {
+        max-width: 100%;
+        height: auto;
+        border-radius: 12px;
+    }
+
+    /* تحسين شكل الجداول في لوحة الإدارة للموبايل */
+    .admin-table-container {
+        border-radius: 12px;
+        margin: 10px -5%; /* استغلال المساحة الجانبية */
+        width: 110%;
+    }
+    
+    /* الوضع الليلي المحسن للهاتف */
+    body.light-mode .dash-nav a {
+        background: rgba(0, 0, 0, 0.05);
+        color: var(--text-primary);
+    }
+}
+
+/* تأثير تحميل وانتقال ناعم بين الأقسام */
+.page-section {
+    animation: sectionFadeIn 0.4s ease-out;
+}
+
+@keyframes sectionFadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* تحسين قراءة الخطوط العربية */
+h1, h2, h3 { font-weight: 900; letter-spacing: 0; }
+p { font-weight: 400; color: var(--text-secondary); }
+
+/* منع الزوم التلقائي في آيفون عند الضغط على المدخلات */
+@media screen and (max-width: 768px) {
+    input, select, textarea { font-size: 16px !important; }
+}
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -919,13 +1017,15 @@ markAcceptedSeen(currentUserUID);
             navigate('admin-page'); loadAdminStats(); loadPendingUsers();
         }
 
-        function showAdminTab(tab) {
-            document.querySelectorAll('.admin-tab').forEach(t => t.classList.add('hidden'));
-            document.getElementById('admin-'+tab).classList.remove('hidden');
-            if(tab === 'students') loadStudentCards();
-            if(tab === 'blocked') loadBlockedUsers();
-            if(tab === 'manage-content') loadManageLecs();
-        }
+      function showAdminTab(tab) {
+    document.querySelectorAll('.admin-tab').forEach(t => t.classList.add('hidden'));
+    document.getElementById('admin-'+tab).classList.remove('hidden');
+    
+    if(tab === 'students') loadStudentCards();
+    if(tab === 'blocked') loadBlockedUsers();
+    if(tab === 'manage-content') loadManageLecs();
+    if(tab === 'support-admin') loadAdminTickets(); // هذا هو السطر المطلوب إضافته
+}
 
         function loadAdminStats() {
             db.ref('users').on('value', snap => {
@@ -1128,6 +1228,111 @@ function toggleTheme() {
         if(checkbox) checkbox.checked = true;
     }
 })();
+
+/* === Mobile UX Enhancement === */
+
+document.addEventListener("DOMContentLoaded", function() {
+    // 1. تحسين الأداء: إضافة Lazy Loading للصور بشكل تلقائي
+    const allImages = document.querySelectorAll('img');
+    allImages.forEach(img => {
+        img.setAttribute('loading', 'lazy');
+    });
+
+    // 2. تأثير انتقال ناعم عند تبديل التبويبات (Tabs)
+    const originalShowTab = window.showTab;
+    window.showTab = function(tab) {
+        const target = document.getElementById('tab-' + tab);
+        if (target) {
+            target.style.opacity = '0';
+            target.style.transform = 'translateY(10px)';
+            
+            // استدعاء الوظيفة الأصلية
+            originalShowTab(tab);
+            
+            // تنفيذ التأثير
+            setTimeout(() => {
+                target.style.transition = 'all 0.4s ease';
+                target.style.opacity = '1';
+                target.style.transform = 'translateY(0)';
+            }, 50);
+        } else {
+            originalShowTab(tab);
+        }
+    };
+
+    // 3. تحسين التنقل: إغلاق القائمة أو التمرير لأعلى عند الضغط على رابط في الموبايل
+    const navLinks = document.querySelectorAll('.dash-nav a');
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            if (window.innerWidth < 768) {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
+    });
+
+    // 4. معالجة ظهور الفيديوهات بشكل متجاوب
+    const fixResponsiveMedia = () => {
+        const frames = document.querySelectorAll('iframe, video');
+        frames.forEach(frame => {
+            const width = frame.offsetWidth;
+            // الحفاظ على نسبة العرض 16:9
+            frame.style.height = (width * 0.5625) + 'px';
+        });
+    };
+    
+    window.addEventListener('resize', fixResponsiveMedia);
+    fixResponsiveMedia();
+});
+
+// دالة عرض التذاكر في لوحة الإدارة
+function loadAdminTickets() {
+    db.ref('tickets').on('value', (snap) => {
+        const container = document.getElementById('admin-tickets-container');
+        container.innerHTML = '';
+        if(!snap.exists()) {
+            container.innerHTML = '<p style="color:white; text-align:center;">لا توجد تذاكر حالياً</p>';
+            return;
+        }
+        snap.forEach(child => {
+            let t = child.val();
+            let tid = child.key;
+            container.innerHTML += `
+                <div class="card" style="background:white; color:var(--primary); padding:20px; border-right: 5px solid var(--gold);">
+                    <div style="display:flex; justify-content:space-between;">
+                        <strong><i class="fas fa-user"></i> ${t.userName}</strong>
+                        <small style="color:#777;">${t.date}</small>
+                    </div>
+                    <p style="margin:15px 0; border-right: 2px solid #eee; padding-right:10px;">${t.msg}</p>
+                    <div class="input-group">
+                        <label>الرد على الطالب:</label>
+                        <input type="text" id="rep-input-${tid}" placeholder="اكتب ردك هنا..." value="${t.reply || ''}">
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <button class="action-btn btn-approve" style="flex:2" onclick="replyToTicket('${tid}')">إرسال الرد</button>
+                        <button class="action-btn btn-reject" style="flex:1" onclick="deleteTicketAdmin('${tid}')">حذف</button>
+                    </div>
+                </div>`;
+        });
+    });
+}
+
+// دالة إرسال الرد
+function replyToTicket(tid) {
+    const replyText = document.getElementById('rep-input-' + tid).value;
+    if(!replyText) return showToast('اكتب رداً أولاً');
+    db.ref('tickets/' + tid).update({ reply: replyText }).then(() => {
+        showToast('تم إرسال الرد للطالب');
+    });
+}
+
+// دالة حذف التذكرة
+function deleteTicketAdmin(tid) {
+    if(confirm('هل تريد حذف هذه التذكرة نهائياً؟')) {
+        db.ref('tickets/' + tid).remove().then(() => {
+            showToast('تم حذف التذكرة');
+        });
+    }
+}
     </script>
 </body>
 </html>
