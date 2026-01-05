@@ -289,6 +289,44 @@ p { font-weight: 400; color: var(--text-secondary); }
 @media screen and (max-width: 768px) {
     input, select, textarea { font-size: 16px !important; }
 }
+
+
+/* هذه التنسيقات ستطبق فقط على الشاشات الصغيرة (التليفونات) */
+@media (max-width: 600px) {
+    
+    /* تنسيق روابط التنقل لتصبح كأزرار مرتبة */
+    .dash-nav {
+        display: flex !important;
+        width: 100% !important;
+        justify-content: center !important;
+        flex-wrap: wrap !important; /* لجعل الأزرار تنزل لسطر جديد إذا كانت الشاشة ضيقة جداً */
+        gap: 8px !important;
+        margin-top: 15px !important;
+    }
+
+    .dash-nav a {
+        margin-right: 0 !important;
+        padding: 8px 12px !important;
+        font-size: 0.85rem !important;
+        border-radius: 10px !important;
+        text-align: center;
+        flex: 1 1 auto; /* يجعل الأزرار تتوزع بشكل متساوي */
+    }
+
+    /* تحسين الألوان في الوضع النهاري على التليفون فقط */
+    body.light-mode .dash-nav a {
+        background: #e9ecef !important; /* لون رمادي فاتح جداً للأزرار */
+        color: #001a4d !important;      /* لون الخط كحلي غامق ليكون واضحاً */
+        border: 1px solid #dee2e6 !important;
+    }
+
+    /* لون الزر النشط (الذي يقف عليه الطالب حالياً) في وضع النهار */
+    body.light-mode .dash-nav a.active-tab {
+        background: #001a4d !important; /* اللون الكحلي */
+        color: #ffffff !important;      /* خط أبيض */
+        border-color: #c5a059 !important; /* إطار ذهبي بسيط */
+    }
+}
     </style>
 </head>
 <body oncontextmenu="return false;">
