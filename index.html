@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+ lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -352,25 +352,104 @@ p { font-weight: 400; color: var(--text-secondary); }
     }
 }
 /* تصغير الهيدر الأزرق للموبايل فقط */
+/* تحسينات الهيدر للموبايل - نسخة عصرية */
 @media (max-width: 600px) {
     .dash-header {
-        padding: 10px 12px !important; /* تقليل المسافة الداخلية */
+        padding: 12px 15px !important;
+        flex-direction: column !important; /* ترتيب العناصر فوق بعضها */
+        align-items: stretch !important;
+        background: rgba(0, 26, 77, 0.95) !important; /* لون كحلي شفاف */
+        backdrop-filter: blur(10px); /* تأثير الزجاج */
+        gap: 12px !important;
+    }
+
+    /* السطر الأول: الاسم وزر التبديل */
+    .dash-header > div {
+        justify-content: space-between !important;
+        width: 100% !important;
+        gap: 0 !important;
     }
 
     .dash-header h2 {
-        font-size: 1rem !important; /* تصغير كلمة MR. ABDELRAHMAN */
+        font-size: 1.1rem !important; /* حجم مناسب لاسم المستر */
+        font-weight: 900 !important;
+        letter-spacing: 0.5px;
     }
 
+    /* تنسيق زر تبديل الوضع للموبايل */
+    .theme-switch-container {
+        margin-right: 0 !important;
+    }
+
+    .theme-switch-label {
+        width: 55px !important;
+        height: 28px !important;
+        border-width: 1px !important;
+    }
+
+    .theme-switch-ball {
+        width: 22px !important;
+        height: 22px !important;
+        top: 2px !important;
+        left: 2px !important;
+    }
+
+    body.light-mode .theme-switch-ball {
+        transform: translateX(27px) !important;
+    }
+
+    /* تنسيق قائمة الأقسام (الأزرار) */
     .dash-nav {
-        margin-top: 10px !important; /* تقليل المسافة بين الاسم والأزرار */
-        gap: 4px !important; /* تقليل المسافة بين الأزرار وبعضها */
+        display: flex !important;
+        flex-direction: row !important;
+        overflow-x: auto !important; /* تمريض عرضي إذا زادت الأقسام */
+        white-space: nowrap !important;
+        gap: 8px !important;
+        padding-bottom: 5px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none; /* إخفاء شريط التمرير */
+    }
+
+    .dash-nav::-webkit-scrollbar {
+        display: none;
     }
 
     .dash-nav a {
-        padding: 6px 8px !important; /* تصغير حجم أزرار (الرئيسية، المحاضرات...) */
-        font-size: 0.75rem !important; /* تصغير خط الأزرار */
+        background: rgba(255, 255, 255, 0.1) !important;
+        color: #fff !important;
+        padding: 8px 16px !important;
+        border-radius: 12px !important;
+        font-size: 0.85rem !important;
+        margin: 0 !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        flex: 0 0 auto; /* منع الأزرار من الانكماش */
+    }
+
+    .dash-nav a.active-tab {
+        background: var(--gold) !important;
+        color: #000 !important;
+        border-color: var(--gold) !important;
+        font-weight: 900;
+    }
+
+    /* تعديل الهيدر في الوضع الفاتح للموبايل */
+    body.light-mode .dash-header {
+        background: rgba(255, 255, 255, 0.9) !important;
+        border-bottom: 1px solid #ddd !important;
+    }
+
+    body.light-mode .dash-nav a {
+        background: #eee !important;
+        color: #333 !important;
+        border-color: #ddd !important;
+    }
+
+    body.light-mode .dash-nav a.active-tab {
+        background: var(--primary) !important;
+        color: #fff !important;
     }
 }
+
 
     </style>
 </head>
@@ -1425,6 +1504,7 @@ function deleteTicketAdmin(tid) {
     </script>
 </body>
 </html>
+
 
 
 
