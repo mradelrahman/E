@@ -440,9 +440,6 @@ p { font-weight: 400; color: var(--text-secondary); }
         <a onclick="showTab('profile')" id="nav-profile">ملفي</a>
         <a onclick="showTab('support')" id="nav-support">الدعم</a>
         <a id="admin-btn" onclick="openAdmin()" class="hidden" style="color:#fff; border:1px solid #fff; padding:5px 10px; border-radius:8px;"><i class="fas fa-user-shield"></i> الإدارة</a>
-        <a onclick="openLogoutModal()" title="خروج" style="color: #ff4d4d !important; border: 1px solid #ff4d4d !important; padding: 8px 12px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer;">
-    <i class="fas fa-sign-out-alt"></i>
-</a>
     </nav>
 </header>
 
@@ -480,22 +477,29 @@ p { font-weight: 400; color: var(--text-secondary); }
                     <div id="lectures-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px;"></div>
                 </div>
 
-                <div id="tab-profile" class="tab-content hidden">
-                    <div class="card">
-                        <div class="profile-container">
-                            <div class="profile-avatar"><i class="fas fa-user-graduate"></i></div>
-                            <div>
-                                <h2 id="p-name-head" style="color:var(--gold); margin-bottom:10px;">جاري التحميل...</h2>
-                                <p style="opacity:0.7; margin-bottom:20px;">طالب معتمد في منصة مستر عبد الرحمن </p>
-                                <div id="profile-data" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;"></div>
-                            </div>
-                        </div>
-                        <div style="margin-top: 40px; padding: 20px; background: rgba(0,0,0,0.2); border-radius: 20px;">
-                            <h4 style="color:var(--gold)"><i class="fas fa-chart-line"></i> معدل إنجازك للمحاضرات</h4>
-                            <div class="battery-container"><div class="battery-level" id="battery-level"></div></div>
-                        </div>
-                    </div>
-                </div>
+<div id="tab-profile" class="tab-content hidden">
+    <div class="card">
+        <div class="profile-container">
+            <div class="profile-avatar"><i class="fas fa-user-graduate"></i></div>
+            <div>
+                <h2 id="p-name-head" style="color:var(--gold); margin-bottom:10px;">جاري التحميل...</h2>
+                <p style="opacity:0.7; margin-bottom:20px;">طالب معتمد في منصة مستر عبد الرحمن </p>
+                <div id="profile-data" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;"></div>
+            </div>
+        </div>
+        <div style="margin-top: 40px; padding: 20px; background: rgba(0,0,0,0.2); border-radius: 20px;">
+            <h4 style="color:var(--gold)"><i class="fas fa-chart-line"></i> معدل إنجازك للمحاضرات</h4>
+            <div class="battery-container"><div class="battery-level" id="battery-level"></div></div>
+        </div>
+
+        <div style="margin-top: 30px; border-top: 1px solid var(--border-color); padding-top: 20px; text-align: center;">
+            <button onclick="openLogoutModal()" class="btn-action" style="background: var(--error); max-width: 250px; margin: 0 auto; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                <i class="fas fa-sign-out-alt"></i> تسجيل الخروج من الحساب
+            </button>
+        </div>
+    </div>
+</div>
+
 
                 <div id="tab-support" class="tab-content hidden">
                     <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:20px;">
@@ -1376,4 +1380,5 @@ function deleteTicketAdmin(tid) {
     </script>
 </body>
 </html>
+
 
