@@ -327,6 +327,51 @@ p { font-weight: 400; color: var(--text-secondary); }
         border-color: #c5a059 !important; /* إطار ذهبي بسيط */
     }
 }
+        /* تصغير زر تبديل الوضع للموبايل فقط */
+@media (max-width: 600px) {
+    .theme-switch-label {
+        width: 50px !important;  /* عرض الزر */
+        height: 26px !important; /* طول الزر */
+        padding: 0 5px !important;
+    }
+
+    .theme-switch-ball {
+        width: 20px !important;  /* حجم الدائرة المتحركة */
+        height: 20px !important; /* حجم الدائرة المتحركة */
+        top: 2px !important;
+        left: 2px !important;
+    }
+
+    /* ضبط مسافة حركة الدائرة عند الضغط */
+    body.light-mode .theme-switch-ball {
+        transform: translateX(25px) !important; 
+    }
+
+    .theme-switch-label i {
+        font-size: 11px !important; /* تصغير حجم الشمس والقمر */
+    }
+}
+/* تصغير الهيدر الأزرق للموبايل فقط */
+@media (max-width: 600px) {
+    .dash-header {
+        padding: 10px 12px !important; /* تقليل المسافة الداخلية */
+    }
+
+    .dash-header h2 {
+        font-size: 1rem !important; /* تصغير كلمة MR. ABDELRAHMAN */
+    }
+
+    .dash-nav {
+        margin-top: 10px !important; /* تقليل المسافة بين الاسم والأزرار */
+        gap: 4px !important; /* تقليل المسافة بين الأزرار وبعضها */
+    }
+
+    .dash-nav a {
+        padding: 6px 8px !important; /* تصغير حجم أزرار (الرئيسية، المحاضرات...) */
+        font-size: 0.75rem !important; /* تصغير خط الأزرار */
+    }
+}
+
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -1380,5 +1425,6 @@ function deleteTicketAdmin(tid) {
     </script>
 </body>
 </html>
+
 
 
