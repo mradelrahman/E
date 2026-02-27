@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE LEGEND | MR. ABDELRAHMAN</title>
+    <title>MR. ABDELRAHMAN</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
 :root {
-    /* --- الوضع الافتراضي (الداكن) --- */
+    
     --bg-body: #050505;
     --card-bg: rgba(255, 255, 255, 0.03); 
     --footer-bg: #000000;
@@ -19,12 +19,12 @@
     --border-color: rgba(255,255,255,0.1);
     --shadow: 0 50px 100px rgba(0,0,0,0.7);
     --admin-bg: #0a0a0a;
-    /* ألوان الحالة */
+    
     --success: #27ae60;
     --error: #e74c3c;
 }
 
-/* --- الوضع النهاري (Light Mode) --- */
+
 body.light-mode {
     --bg-body: #f3f4f6;           
     --card-bg: #ffffff;           
@@ -36,7 +36,7 @@ body.light-mode {
     --border-color: #d1d5db;
     --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     --admin-bg: #f9fafb;
-    /* ألوان حالة أغمق قليلاً للوضوح في الخلفية الفاتحة */
+    
     --success: #1e8449;
     --error: #c0392b;
 }
@@ -44,7 +44,7 @@ body.light-mode {
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
         body { background: var(--bg-body); color: var(--text-primary); overflow-x: hidden; display: flex; flex-direction: column; min-height: 100vh; transition: 0.5s; }
 
-        /* Loader */
+        
         #page-loader {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(5, 5, 5, 0.98); backdrop-filter: blur(20px);
@@ -53,15 +53,15 @@ body.light-mode {
         .spinner { width: 60px; height: 60px; border: 5px solid var(--primary); border-top: 5px solid var(--gold); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* Toast Notifications */
+       
         #toast-container { position: fixed; bottom: 20px; left: 20px; z-index: 9999; }
         .toast { background: var(--primary); border-right: 5px solid var(--gold); color: white; padding: 15px 25px; margin-top: 10px; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); animation: slideIn 0.3s ease-out; }
         @keyframes slideIn { from { transform: translateX(-100%); } to { transform: translateX(0); } }
 
-        /* Global Notification Bar */
+       
         #global-announcement { display:none; background: linear-gradient(90deg, var(--gold), #f1c40f); color: black; padding: 15px; text-align: center; font-weight: 900; position: sticky; top: 0; z-index: 1001; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
 
-        /* Animations */
+        
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
         @keyframes wave { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } }
 
@@ -165,12 +165,12 @@ body.light-mode {
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 20px; }
         .modal-content { background: var(--card-bg); border: 1px solid var(--gold); padding: 30px; border-radius: 25px; max-width: 500px; width: 100%; position: relative; overflow-y: auto; max-height: 90vh; color: var(--text-primary); }
 
-        /* --- تعديلات الصورة (نافذة تعديل الطالب) --- */
+        
         .editable-input { background: var(--bg-body); border: 1px solid var(--border-color); color: var(--text-primary); padding: 10px; border-radius: 8px; width: 100%; margin-bottom: 10px; outline: none; transition: 0.3s; }
         .editable-input:focus { border-color: var(--gold); }
         .editable-label { font-size: 0.8rem; color: var(--gold); display: block; margin-bottom: 3px; font-weight: bold; }
 
-        /* --- ألوان الأزرار والحالة --- */
+       
         .btn-approve { background: var(--success) !important; color: white !important; }
         .btn-reject, .btn-logout-confirm { background: var(--error) !important; color: white !important; }
         #stat-accepted i { color: var(--success) !important; }
@@ -178,7 +178,7 @@ body.light-mode {
         #stat-accepted h2 { color: var(--success) !important; }
         #stat-rejected h2 { color: var(--error) !important; }
 
-        /* --- Theme Toggle --- */
+      
         .theme-switch-container { display: flex; align-items: center; margin-right: 25px; }
         .theme-switch-checkbox { display: none; }
         .theme-switch-label { width: 75px; height: 38px; background-color: #111; border: 2px solid var(--gold); border-radius: 50px; position: relative; cursor: pointer; display: flex; justify-content: space-between; align-items: center; padding: 0 8px; transition: 0.3s; }
@@ -192,18 +192,17 @@ body.light-mode {
         @media (max-width: 850px) { .main-card { grid-template-columns: 1fr; } .master-side { display: none; } .profile-container { grid-template-columns: 1fr; text-align: center; justify-items: center; } .dash-header { flex-direction: column; gap: 10px; } }
         body { user-select: none; -webkit-user-select: none; }
 
-        /* === Mobile UX Enhancement === */
+       
 
-/* تحسينات عامة للموبايل */
 @media (max-width: 768px) {
-    /* تحسين انسيابية الخط العربي والمقاسات */
+    
     html { font-size: 14px; }
     body { line-height: 1.6; }
     
-    /* تحسين الـ Hero Section لتناسب طول شاشة الهاتف */
+    
     .hero-section { padding: 20px 10px; min-height: auto; }
     
-    /* ضبط القائمة العلوية (Navbar) لتكون سهلة الاستخدام باليد الواحدة */
+    
     .dash-header {
         padding: 10px 15px;
         position: sticky;
@@ -221,7 +220,7 @@ body.light-mode {
         justify-content: flex-start;
         gap: 10px;
         -webkit-overflow-scrolling: touch;
-        scrollbar-width: none; /* إخفاء شريط التمرير */
+        scrollbar-width: none; 
     }
     
     .dash-nav::-webkit-scrollbar { display: none; }
@@ -235,43 +234,43 @@ body.light-mode {
         font-size: 0.85rem;
     }
 
-    /* جعل الأزرار (Touch Friendly) */
+
     .btn-action, .action-btn, .lec-expand-trigger {
-        min-height: 48px; /* مقاس قياسي للمس */
+        min-height: 48px;
         display: flex;
         align-items: center;
         justify-content: center;
         margin-bottom: 8px;
     }
 
-    /* تحسين عرض الكروت والشبكة على الشاشات الصغيرة */
+    
     .main-card { border-radius: 20px; border: none; }
     .form-side { padding: 25px 20px; }
     .nav-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
     .lecture-card { margin-bottom: 15px; border-radius: 18px; }
     
-    /* ضبط الصور والفيديو لتكون Responsive 100% */
+   
     img, video, iframe {
         max-width: 100%;
         height: auto;
         border-radius: 12px;
     }
 
-    /* تحسين شكل الجداول في لوحة الإدارة للموبايل */
+  
     .admin-table-container {
         border-radius: 12px;
-        margin: 10px -5%; /* استغلال المساحة الجانبية */
+        margin: 10px -5%; 
         width: 110%;
     }
     
-    /* الوضع الليلي المحسن للهاتف */
+    
     body.light-mode .dash-nav a {
         background: rgba(0, 0, 0, 0.05);
         color: var(--text-primary);
     }
 }
 
-/* تأثير تحميل وانتقال ناعم بين الأقسام */
+
 .page-section {
     animation: sectionFadeIn 0.4s ease-out;
 }
@@ -281,25 +280,25 @@ body.light-mode {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* تحسين قراءة الخطوط العربية */
+
 h1, h2, h3 { font-weight: 900; letter-spacing: 0; }
 p { font-weight: 400; color: var(--text-secondary); }
 
-/* منع الزوم التلقائي في آيفون عند الضغط على المدخلات */
+
 @media screen and (max-width: 768px) {
     input, select, textarea { font-size: 16px !important; }
 }
 
 
-/* هذه التنسيقات ستطبق فقط على الشاشات الصغيرة (التليفونات) */
+
 @media (max-width: 600px) {
     
-    /* تنسيق روابط التنقل لتصبح كأزرار مرتبة */
+    
     .dash-nav {
         display: flex !important;
         width: 100% !important;
         justify-content: center !important;
-        flex-wrap: wrap !important; /* لجعل الأزرار تنزل لسطر جديد إذا كانت الشاشة ضيقة جداً */
+        flex-wrap: wrap !important; 
         gap: 8px !important;
         margin-top: 15px !important;
     }
@@ -310,60 +309,59 @@ p { font-weight: 400; color: var(--text-secondary); }
         font-size: 0.85rem !important;
         border-radius: 10px !important;
         text-align: center;
-        flex: 1 1 auto; /* يجعل الأزرار تتوزع بشكل متساوي */
+        flex: 1 1 auto; 
     }
 
-    /* تحسين الألوان في الوضع النهاري على التليفون فقط */
+    
     body.light-mode .dash-nav a {
-        background: #e9ecef !important; /* لون رمادي فاتح جداً للأزرار */
-        color: #001a4d !important;      /* لون الخط كحلي غامق ليكون واضحاً */
+        background: #e9ecef !important; 
+        color: #001a4d !important;      
         border: 1px solid #dee2e6 !important;
     }
 
-    /* لون الزر النشط (الذي يقف عليه الطالب حالياً) في وضع النهار */
+    
     body.light-mode .dash-nav a.active-tab {
-        background: #001a4d !important; /* اللون الكحلي */
-        color: #ffffff !important;      /* خط أبيض */
-        border-color: #c5a059 !important; /* إطار ذهبي بسيط */
+        background: #001a4d !important; 
+        color: #ffffff !important;      
+        border-color: #c5a059 !important; 
     }
 }
-        /* تصغير زر تبديل الوضع للموبايل فقط */
+        
 @media (max-width: 600px) {
     .theme-switch-label {
-        width: 50px !important;  /* عرض الزر */
-        height: 26px !important; /* طول الزر */
+        width: 50px !important;  
+        height: 26px !important; 
         padding: 0 5px !important;
     }
 
     .theme-switch-ball {
-        width: 20px !important;  /* حجم الدائرة المتحركة */
-        height: 20px !important; /* حجم الدائرة المتحركة */
+        width: 20px !important;  
+        height: 20px !important; 
         top: 2px !important;
         left: 2px !important;
     }
 
-    /* ضبط مسافة حركة الدائرة عند الضغط */
     body.light-mode .theme-switch-ball {
         transform: translateX(25px) !important; 
     }
 
     .theme-switch-label i {
-        font-size: 11px !important; /* تصغير حجم الشمس والقمر */
+        font-size: 11px !important; 
     }
 }
-/* تصغير الهيدر الأزرق للموبايل فقط */
-/* تحسينات الهيدر للموبايل - نسخة عصرية */
+
+
 @media (max-width: 600px) {
     .dash-header {
         padding: 12px 15px !important;
-        flex-direction: column !important; /* ترتيب العناصر فوق بعضها */
+        flex-direction: column !important; 
         align-items: stretch !important;
-        background: rgba(0, 26, 77, 0.95) !important; /* لون كحلي شفاف */
-        backdrop-filter: blur(10px); /* تأثير الزجاج */
+        background: rgba(0, 26, 77, 0.95) !important;
+        backdrop-filter: blur(10px); 
         gap: 12px !important;
     }
 
-    /* السطر الأول: الاسم وزر التبديل */
+   
     .dash-header > div {
         justify-content: space-between !important;
         width: 100% !important;
@@ -371,12 +369,12 @@ p { font-weight: 400; color: var(--text-secondary); }
     }
 
     .dash-header h2 {
-        font-size: 1.1rem !important; /* حجم مناسب لاسم المستر */
+        font-size: 1.1rem !important; 
         font-weight: 900 !important;
         letter-spacing: 0.5px;
     }
 
-    /* تنسيق زر تبديل الوضع للموبايل */
+    
     .theme-switch-container {
         margin-right: 0 !important;
     }
@@ -398,16 +396,16 @@ p { font-weight: 400; color: var(--text-secondary); }
         transform: translateX(27px) !important;
     }
 
-    /* تنسيق قائمة الأقسام (الأزرار) */
+   
     .dash-nav {
         display: flex !important;
         flex-direction: row !important;
-        overflow-x: auto !important; /* تمريض عرضي إذا زادت الأقسام */
+        overflow-x: auto !important; 
         white-space: nowrap !important;
         gap: 8px !important;
         padding-bottom: 5px;
         -webkit-overflow-scrolling: touch;
-        scrollbar-width: none; /* إخفاء شريط التمرير */
+        scrollbar-width: none; 
     }
 
     .dash-nav::-webkit-scrollbar {
@@ -422,7 +420,7 @@ p { font-weight: 400; color: var(--text-secondary); }
         font-size: 0.85rem !important;
         margin: 0 !important;
         border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        flex: 0 0 auto; /* منع الأزرار من الانكماش */
+        flex: 0 0 auto; 
     }
 
     .dash-nav a.active-tab {
@@ -432,7 +430,7 @@ p { font-weight: 400; color: var(--text-secondary); }
         font-weight: 900;
     }
 
-    /* تعديل الهيدر في الوضع الفاتح للموبايل */
+
     body.light-mode .dash-header {
         background: rgba(255, 255, 255, 0.9) !important;
         border-bottom: 1px solid #ddd !important;
@@ -450,33 +448,32 @@ p { font-weight: 400; color: var(--text-secondary); }
     }
 }
 
-        /* تنسيقات خاصة لتصغير الهيدر على الموبايل فقط */
 @media (max-width: 600px) {
-    /* 1. تصغير الحاوية الكبيرة للهيدر */
+
     .dash-header {
-        padding: 8px 12px !important; /* تقليل المساحة العلوية والجانبية */
-        gap: 5px !important; /* تقليل المسافة بين السطرين */
+        padding: 8px 12px !important;
+        gap: 5px !important; 
     }
 
-    /* 2. تصغير اسم المستر */
+   
     .dash-header h2 {
-        font-size: 0.95rem !important; /* تصغير حجم الخط */
+        font-size: 0.95rem !important;
         margin-bottom: 0 !important;
     }
 
-    /* 3. تصغير أزرار التنقل (الرئيسية، المحاضرات، إلخ) */
+ 
     .dash-nav {
-        margin-top: 5px !important; /* تقليل المسافة فوق الأزرار */
-        gap: 5px !important; /* تقرب الأزرار من بعضها */
+        margin-top: 5px !important; 
+        gap: 5px !important; 
     }
 
     .dash-nav a {
-        padding: 5px 10px !important; /* تصغير حجم الزر نفسه */
-        font-size: 0.75rem !important; /* تصغير خط الكلام داخل الزر */
+        padding: 5px 10px !important; 
+        font-size: 0.75rem !important; 
         border-radius: 8px !important;
     }
 
-    /* 4. تصغير زر تبديل الوضع (الشمس والقمر) أكثر */
+ 
     .theme-switch-label {
         width: 45px !important;
         height: 22px !important;
@@ -701,10 +698,13 @@ p { font-weight: 400; color: var(--text-secondary); }
 
             <div style="padding:30px 5%;">
                 <div class="admin-stats">
-                    <div class="stat-card"><h4>إجمالي الطلاب</h4><h2 id="stat-users">0</h2></div>
-                    <div class="stat-card"><h4>طلبات معلقة</h4><h2 id="stat-pending-val" style="color:#f39c12">0</h2></div>
-                    <div class="stat-card"><h4>المحاضرات</h4><h2 id="stat-lecs">0</h2></div>
-                    <div class="stat-card"><h4>تذاكر الدعم</h4><h2 id="stat-tickets">0</h2></div>
+                  <div class="stat-card"><h4>إجمالي طلاب المنصة</h4><h2 id="stat-users">0</h2></div>
+<div class="stat-card"><h4>الصف الأول</h4><h2 id="stat-g1">0</h2></div>
+<div class="stat-card"><h4>الصف الثاني</h4><h2 id="stat-g2">0</h2></div>
+<div class="stat-card"><h4>الصف الثالث</h4><h2 id="stat-g3">0</h2></div>
+<div class="stat-card"><h4>طلبات معلقة</h4><h2 id="stat-pending-val" style="color:#f39c12">0</h2></div>
+<div class="stat-card"><h4>المحاضرات</h4><h2 id="stat-lecs">0</h2></div>
+<div class="stat-card"><h4>تذاكر الدعم</h4><h2 id="stat-tickets">0</h2></div>
                 </div>
 
                 <div style="display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap;">
@@ -722,10 +722,22 @@ p { font-weight: 400; color: var(--text-secondary); }
                     <div id="pending-cards-container" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:15px;"></div>
                 </div>
 
-                <div id="admin-students" class="admin-tab hidden">
-                    <h3 style="color:var(--gold); margin-bottom:15px;">قائمة الطلاب (كروت)</h3>
-                    <div id="students-grid-container" class="student-grid"></div>
-                </div>
+<div id="admin-students" class="admin-tab hidden">
+    <h3 style="color:var(--gold); margin-bottom:15px;">قائمة الطلاب</h3>
+    
+    <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
+        <input type="text" id="searchStudentName" placeholder="🔍 ابحث باسم الطالب..." class="editable-input" style="flex: 2; min-width: 200px; margin-bottom: 0;" oninput="loadStudentCards()">
+        <select id="filterStudentGrade" class="editable-input" style="flex: 1; min-width: 150px; margin-bottom: 0; background: #222;" onchange="loadStudentCards()">
+            <option value="all">كل الصفوف</option>
+            <option value="1">الصف الأول</option>
+            <option value="2">الصف الثاني</option>
+            <option value="3">الصف الثالث</option>
+        </select>
+    </div>
+
+    <div id="students-grid-container" class="student-grid"></div>
+</div>
+
 
                 <div id="admin-notifications" class="admin-tab hidden">
                     <div class="card" style="max-width:700px; margin:auto; background:white; color:var(--primary);">
@@ -815,6 +827,8 @@ p { font-weight: 400; color: var(--text-secondary); }
                     <option value="2">2 ثانوي</option>
                     <option value="3">3 ثانوي</option>
                 </select>
+               <label class="editable-label">تاريخ الانضمام للمنصة</label>
+<input type="text" id="edit-stu-joindate" class="editable-input" readonly style="opacity: 0.7; cursor: not-allowed;">
             </div>
 
             <div class="battery-container"><div class="battery-level" id="det-battery"></div></div>
@@ -1239,19 +1253,24 @@ markAcceptedSeen(currentUserUID);
     if(tab === 'support-admin') loadAdminTickets(); // هذا هو السطر المطلوب إضافته
 }
 
-        function loadAdminStats() {
-            db.ref('users').on('value', snap => {
-                let users = snap.val() || {};
-                document.getElementById('stat-users').innerText = Object.keys(users).length;
-                document.getElementById('stat-pending-val').innerText = Object.values(users).filter(u => u.status === 'pending').length;
-            });
-            db.ref('lectures').on('value', snap => {
-                document.getElementById('stat-lecs').innerText = snap.numChildren();
-            });
-            db.ref('tickets').on('value', snap => {
-                document.getElementById('stat-tickets').innerText = snap.numChildren();
-            });
-        }
+function loadAdminStats() {
+    db.ref('users').on('value', snap => {
+        let users = snap.val() || {};
+        let userArray = Object.values(users);
+        
+        document.getElementById('stat-users').innerText = userArray.length;
+        document.getElementById('stat-g1').innerText = userArray.filter(u => u.grade == "1" && u.status === 'accepted').length;
+        document.getElementById('stat-g2').innerText = userArray.filter(u => u.grade == "2" && u.status === 'accepted').length;
+        document.getElementById('stat-g3').innerText = userArray.filter(u => u.grade == "3" && u.status === 'accepted').length;
+        document.getElementById('stat-pending-val').innerText = userArray.filter(u => u.status === 'pending').length;
+    });
+    db.ref('lectures').on('value', snap => {
+        document.getElementById('stat-lecs').innerText = snap.numChildren();
+    });
+    db.ref('tickets').on('value', snap => {
+        document.getElementById('stat-tickets').innerText = snap.numChildren();
+    });
+}
 
         function loadPendingUsers() {
             db.ref('users').orderByChild('status').equalTo('pending').on('value', snap => {
@@ -1272,44 +1291,57 @@ markAcceptedSeen(currentUserUID);
                                 <button class="action-btn btn-approve" style="flex:1" onclick="updateUserStatus('${child.key}', 'accepted')">تفعيل</button>
                                 <button class="action-btn btn-reject" style="flex:1" onclick="updateUserStatus('${child.key}', 'rejected')">رفض</button>
                             </div>
-                        </div>`;
+                        </div>`;     
                 });
             });
         }
 
-        function loadStudentCards() {
-            db.ref('users').on('value', snap => {
-                const container = document.getElementById('students-grid-container');
-                container.innerHTML = '';
-                snap.forEach(child => {
-                    let u = child.val();
-                    if(u.status === 'accepted') {
-                        container.innerHTML += `
-                            <div class="student-card">
-                                <h4>${u.name}</h4>
-                                <p><strong>الهاتف:</strong> ${u.phone}</p>
-                                <p><strong>ولي الأمر:</strong> ${u.parent_phone}</p>
-                                <p><strong>البريد:</strong> ${u.email}</p>
-                                <button class="action-btn btn-details" onclick="openStudentDetails('${child.key}')">عرض وتعديل</button>
-                            </div>`;
-                    }
-                });
-            });
-        }
+      function loadStudentCards() {
+    const searchTerm = document.getElementById('searchStudentName').value.toLowerCase();
+    const filterGrade = document.getElementById('filterStudentGrade').value;
 
-        function openStudentDetails(uid) {
-            selectedStudentUID = uid;
-            db.ref('users/' + uid).once('value', snap => {
-                let u = snap.val();
-                document.getElementById('det-name').innerText = u.name;
-                document.getElementById('edit-stu-name').value = u.name || '';
-                document.getElementById('edit-stu-email').value = u.email || '';
-                document.getElementById('edit-stu-phone').value = u.phone || '';
-                document.getElementById('edit-stu-parent').value = u.parent_phone || '';
-                document.getElementById('edit-stu-grade').value = u.grade || '1';
-                document.getElementById('studentDetailsModal').style.display = 'flex';
-            });
-        }
+    db.ref('users').on('value', snap => {
+        const container = document.getElementById('students-grid-container');
+        container.innerHTML = '';
+        snap.forEach(child => {
+            let u = child.val();
+            // تصفية حسب القبول، البحث، والصف
+            const matchesSearch = u.name.toLowerCase().includes(searchTerm);
+            const matchesGrade = filterGrade === 'all' || u.grade == filterGrade;
+
+            if(u.status === 'accepted' && matchesSearch && matchesGrade) {
+                container.innerHTML += `
+                    <div class="student-card">
+                        <h4>${u.name}</h4>
+                        <p><strong>الصف:</strong> ${u.grade} ثانوي</p>
+                        <p><strong>الهاتف:</strong> ${u.phone}</p>
+                        <p><strong>ولي الأمر:</strong> ${u.parent_phone}</p>
+                        <p><strong>البريد:</strong> ${u.email}</p>
+                        <button class="action-btn btn-details" onclick="openStudentDetails('${child.key}')">عرض وتعديل</button>
+                    </div>`;
+            }
+        });
+    });
+}
+
+       function openStudentDetails(uid) {
+    selectedStudentUID = uid;
+    db.ref('users/' + uid).once('value', snap => {
+        let u = snap.val();
+        document.getElementById('det-name').innerText = u.name;
+        document.getElementById('edit-stu-name').value = u.name || '';
+        document.getElementById('edit-stu-email').value = u.email || '';
+        document.getElementById('edit-stu-phone').value = u.phone || '';
+        document.getElementById('edit-stu-parent').value = u.parent_phone || '';
+        document.getElementById('edit-stu-grade').value = u.grade || '1';
+        
+        // السطر الجديد لإظهار تاريخ الانضمام
+        document.getElementById('edit-stu-joindate').value = u.joinDate || 'غير مسجل';
+        
+        document.getElementById('studentDetailsModal').style.display = 'flex';
+    });
+}      
+
 
         function saveStudentChanges() {
             if(!selectedStudentUID) return;
@@ -1412,15 +1444,15 @@ markAcceptedSeen(currentUserUID);
             }).then(() => { showToast('تم النشر'); e.target.reset(); });
         };
       
-        // --- كود الوضع الليلي والنهاري (النسخة المحسنة) ---
+       
 function toggleTheme() {
     const body = document.body;
     const checkbox = document.getElementById('theme-toggle');
     
-    // التبديل بإضافة/إزالة الكلاس
+   
     body.classList.toggle('light-mode');
     
-    // حفظ الوضع في الذاكرة
+   
     if (body.classList.contains('light-mode')) {
         localStorage.setItem('siteTheme', 'light');
         showToast('تم تفعيل الوضع النهاري ☀️');
@@ -1430,7 +1462,7 @@ function toggleTheme() {
     }
 }
 
-// دالة تعمل فور فتح الموقع لاسترجاع الوضع المحفوظ
+
 (function loadTheme() {
     const savedTheme = localStorage.getItem('siteTheme');
     const checkbox = document.getElementById('theme-toggle');
@@ -1444,13 +1476,13 @@ function toggleTheme() {
 /* === Mobile UX Enhancement === */
 
 document.addEventListener("DOMContentLoaded", function() {
-    // 1. تحسين الأداء: إضافة Lazy Loading للصور بشكل تلقائي
+    
     const allImages = document.querySelectorAll('img');
     allImages.forEach(img => {
         img.setAttribute('loading', 'lazy');
     });
 
-    // 2. تأثير انتقال ناعم عند تبديل التبويبات (Tabs)
+   
     const originalShowTab = window.showTab;
     window.showTab = function(tab) {
         const target = document.getElementById('tab-' + tab);
@@ -1458,10 +1490,10 @@ document.addEventListener("DOMContentLoaded", function() {
             target.style.opacity = '0';
             target.style.transform = 'translateY(10px)';
             
-            // استدعاء الوظيفة الأصلية
+          
             originalShowTab(tab);
             
-            // تنفيذ التأثير
+         
             setTimeout(() => {
                 target.style.transition = 'all 0.4s ease';
                 target.style.opacity = '1';
@@ -1472,7 +1504,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     };
 
-    // 3. تحسين التنقل: إغلاق القائمة أو التمرير لأعلى عند الضغط على رابط في الموبايل
+   
     const navLinks = document.querySelectorAll('.dash-nav a');
     navLinks.forEach(link => {
         link.addEventListener('click', () => {
@@ -1482,12 +1514,12 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-    // 4. معالجة ظهور الفيديوهات بشكل متجاوب
+ 
     const fixResponsiveMedia = () => {
         const frames = document.querySelectorAll('iframe, video');
         frames.forEach(frame => {
             const width = frame.offsetWidth;
-            // الحفاظ على نسبة العرض 16:9
+          
             frame.style.height = (width * 0.5625) + 'px';
         });
     };
@@ -1496,7 +1528,7 @@ document.addEventListener("DOMContentLoaded", function() {
     fixResponsiveMedia();
 });
 
-// دالة عرض التذاكر في لوحة الإدارة
+
 function loadAdminTickets() {
     db.ref('tickets').on('value', (snap) => {
         const container = document.getElementById('admin-tickets-container');
@@ -1528,7 +1560,7 @@ function loadAdminTickets() {
     });
 }
 
-// دالة إرسال الرد
+
 function replyToTicket(tid) {
     const replyText = document.getElementById('rep-input-' + tid).value;
     if(!replyText) return showToast('اكتب رداً أولاً');
@@ -1537,7 +1569,7 @@ function replyToTicket(tid) {
     });
 }
 
-// دالة حذف التذكرة
+
 function deleteTicketAdmin(tid) {
     if(confirm('هل تريد حذف هذه التذكرة نهائياً؟')) {
         db.ref('tickets/' + tid).remove().then(() => {
@@ -1548,7 +1580,6 @@ function deleteTicketAdmin(tid) {
     </script>
 </body>
 </html>
-
 
 
 
